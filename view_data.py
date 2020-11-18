@@ -1,0 +1,78 @@
+import tkinter as tk
+import fungsi
+from tkinter import ttk
+
+#haha tes
+
+class Mulai:
+	def __init__(self, win):
+		self.win = tk.Toplevel(win)
+		self.showData()
+
+	def showData(self):
+		#self.updateData()
+		self.frameList = tk.Frame(self.win, bg='black')
+		self.frameList.pack(side=tk.BOTTOM, fill=tk.X)
+
+		style = ttk.Style(self.frameList)
+		style.configure('Treeview', rowheight=25, height=100)
+
+		self.dataView = ttk.Treeview(self.frameList,selectmode='browse')
+		self.dataView.grid(row=0, column=1,columnspan=2)
+		self.dataView.config(columns=self.indexData,show = "headings")
+
+		for t1,t2,t3 in zip(self.indexData, self.textData, self.ukuranList):
+			self.dataView.heading(t1, text=t2)
+			self.dataView.column(t1, width=t3)
+
+		self.isiDataList()
+
+		scrollData = ttk.Scrollbar(self.frameList, orient="vertical", command=self.dataView.yview)
+		scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
+		self.dataView.configure(yscrollcommand=scrollData.set)
+	
+	def isiDataList(self):
+		self.updateData()
+		for i in self.dataView.get_children():
+			self.dataView.detach(i)
+
+		for num, data in enumerate(self.isData):
+			self.dataView.insert('','end', values=data)
+
+
+# Note : Rapikan fungsi database, jangan membebani. buat satu self
+
+class logSiswa(Mulai):
+	def __init__(self,win):
+		self.indexData = ('id','nama','tanggal', 'waktu', 'lokasi', 'terdekat', 'interaksi')
+		self.textData = ('No','Nama','Tanggal', 'Jam', 'Lokasi', 'Terdekat', 'Interaksi')
+		self.ukuranList = (30, 175, 125, 140, 150, 180, 150)
+		super().__init__(win)
+		self.win.title('Log Siswa')
+
+	def updateData(self):
+		__mydb = fungsi.dB
+		self.c = fungsi.c
+		__sql = "SELECT * from logSiswa"
+		self.c.execute(__sql)
+		self.isData = self.c.fetchall()
+		self.countData = self.c.rowcount
+
+class dataSiswa(Mulai):
+	def __init__(self,win):
+		self.indexData = ('id','nama','kelas')
+		self.textData = ('No','Nama','Kelas')
+		self.ukuranList = (30, 175, 125)
+		super().__init__(win)
+		self.win.title('Data Siswa')
+
+	def updateData(self):
+		__mydb = fungsi.dB
+		self.c = fungsi.c
+		__sql = "SELECT * from dataSiswa"
+		self.c.execute(__sql)
+		self.isData = self.c.fetchall()
+		print(self.isData)
+		self.countData = self.c.rowcount
+	#def __init__(self):
+
