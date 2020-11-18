@@ -56,7 +56,6 @@ def addLog(**data):
 	__cekData = (data['nama'], data['tanggal'], data['lokasi'])
 	c.execute(__cek, __cekData)
 	isData = c.fetchone()
-	#print(isData)
 	if isData == None:
 		print('++++++++++')
 		__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
@@ -64,21 +63,17 @@ def addLog(**data):
 		c.execute(__sqlAdd, __dataSql)
 		dB.commit()
 	else:
-		
-		for i in isData:
-			print('sini\r')
-			print(now-i[3])
-			#print((int(now-i[3])).total_seconds())
-			if int((now-i[3]).total_seconds()) > 5: 
-				print('++++++++++')
-				__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
-				__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['interaksi'])
-
-				c.execute(__sqlAdd, __dataSql)
-				dB.commit()
-			else:
-				pass
-				#print('==========')
+		# print(now)
+		# print(now.total_seconds()-isData[3].total_seconds())
+		if (now.total_seconds()-isData[3].total_seconds()) > 8: 
+			print('++++++++++')
+			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
+			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['interaksi'])
+			c.execute(__sqlAdd, __dataSql)
+			dB.commit()
+		else:
+			pass
+			#print('==========')
 			
 
 
@@ -99,7 +94,7 @@ class faceDetect:
 
 
 
-	def face_haar(self, frame, scale=1.3, minSize=(10,10)):
+	def face_haar(self, frame, scale=1.3, minSize=(2,2)):
 
 		muka = []
 		gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -108,15 +103,14 @@ class faceDetect:
 		    gray,
 			scaleFactor = scale,
 			minNeighbors=5,
-			minSize=minSize,
-			flags=cv.CASCADE_SCALE_IMAGE
+			minSize=minSize
 		)
 		for (x,y,w,h) in faces:
 			muka += [[x,y,w,h]]
 			
 		return(muka)
 
-	def face_dnn(self, frame, conf=0.3): #1.65
+	def face_dnn(self, frame, conf=0.14): #1.65
 		muka = []
 		h,w = frame.shape[:2]
 		blob = cv.dnn.blobFromImage(cv.resize(frame, (300, 300)), conf, (300, 300), [104, 117, 123], False, False)

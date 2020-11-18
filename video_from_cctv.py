@@ -31,8 +31,9 @@ class Cctv:
 
 			self.jumlahCap = 0
 			print(self.namaCCTV, 'Kamera Mulai', self.cam.isOpened())
-			self.detector = fungsi.faceDetect('dnn') 
-
+			self.detector = fungsi.faceDetect('haar') 
+			self.detector2 = fungsi.faceDetect('dnn') # BAKUP
+ 
 			while Cctv.AllFrame[self.idCam]['on'] == True and self.cam.isOpened():
 				#time.sleep(0.2)
 				_, Cctv.AllFrame[self.idCam]['frame'] = self.cam.read()
@@ -51,20 +52,26 @@ class Cctv:
 						#cv.imwrite(nl, frame)
 						self.video_writer.write(frame)
 						#faces = self.detector.face_dnn(frame, conf=0.14)
-						faces = self.detector.face_dnn(frame)
-						for (x, y, w, h) in faces:
-							#imWajah = frame[y:(y+w), x:(x+w)]
-							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
-							try:
+						faces = self.detector.face_haar(frame)
+
+						if len(faces) >= 1:
+							for (x, y, w, h) in faces:
+								#imWajah = frame[y:(y+w), x:(x+w)]
+								#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
 								fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
-							except Exception as e:
-								print('error', e)
-							#t.start()
-							#fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
-							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
-							#cv.imwrite(nl, imWajah)
-							cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
-							#cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
+
+								#t.start()
+								#fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
+								#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
+								#cv.imwrite(nl, imWajah)
+								cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=2)
+								#cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
+						else:
+							facesbak =  self.detector2.face_dnn(frame)
+							for (x, y, w, h) in facesbak:
+								fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
+								cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=2)
+	
 						self.jumlahCap += 1
 
 					except Exception as e:
