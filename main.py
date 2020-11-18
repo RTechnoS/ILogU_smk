@@ -15,6 +15,7 @@ class Dashboard(Utama):
 		self.dash.geometry('800x550')
 		self.dash.title('Dashboard')
 		self.dash.resizable(False, False)
+
 		# self.menubar = tk.Menu(self.dash)
 
 		# fileMenu = tk.Menu(self.menubar, tearoff=0)
@@ -40,12 +41,14 @@ class Dashboard(Utama):
 		cekBtn = tk.Button(frameBtn, text='Cek Muka', state=tk.NORMAL).grid(row=0, column=1, padx=15)
 		logBtn = tk.Button(frameBtn, text='Lihat Log', state=tk.NORMAL, command=self.logSiswa).grid(row=0, column=2, padx=15)
 		dataBtn = tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=self.dataSiswa).grid(row=0, column=3, padx=15)
-		alertBtn = tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=alertWin.Main).grid(row=0, column=4, padx=15)
+		alertBtn = tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
 		cctvMngrBtn = tk.Button(frameBtn, text='CCTV', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=self.cctvManager).grid(row=0, column=5, padx=15)
 		testBtn = tk.Button(frameBtn, text='testing', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
 		#self.dash.config(menu=self.menubar)
 		self.dash.mainloop()
-		
+	
+	def alertWin(self):
+		alertWin.Main(self.dash)
 	def cctvManager(self):
 		winCctv = tk.Tk()
 		winCctv.title('Cctv Manager')

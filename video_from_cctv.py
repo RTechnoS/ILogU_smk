@@ -1,7 +1,7 @@
 import cv2 as cv
 import fungsi
 import os
-import threading
+import threading, time
 
 class Cctv:
 	AllFrame = {}
@@ -31,9 +31,10 @@ class Cctv:
 
 			self.jumlahCap = 0
 			print(self.namaCCTV, 'Kamera Mulai', self.cam.isOpened())
-			self.detector = fungsi.faceDetect('haar') 
+			self.detector = fungsi.faceDetect('dnn') 
 
 			while Cctv.AllFrame[self.idCam]['on'] == True and self.cam.isOpened():
+				#time.sleep(0.2)
 				_, Cctv.AllFrame[self.idCam]['frame'] = self.cam.read()
 				if _:
 					try:
@@ -50,11 +51,14 @@ class Cctv:
 						#cv.imwrite(nl, frame)
 						self.video_writer.write(frame)
 						#faces = self.detector.face_dnn(frame, conf=0.14)
-						faces = self.detector.face_haar(frame, minSize=(1,1), scale=1.2)
+						faces = self.detector.face_dnn(frame)
 						for (x, y, w, h) in faces:
 							#imWajah = frame[y:(y+w), x:(x+w)]
 							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
-							fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
+							try:
+								fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
+							except Exception as e:
+								print('error', e)
 							#t.start()
 							#fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
 							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
@@ -79,8 +83,7 @@ class Cctv:
 
 	def showFrame(self):
 		# print(self.idCam)
-		print(Cctv.AllFrame[self.idCam]['on'])
-
+		#print(Cctv.AllFrame[self.idCam]['on'])
 		while Cctv.AllFrame[self.idCam]['on']:
 			frame = Cctv.AllFrame[self.idCam]['frame']
 			#print(frame)			
@@ -91,7 +94,6 @@ class Cctv:
 			#cv.destroyAllWindows()
 			if cv.waitKey(20) & 0xFF == 27:
 				break
-
 
 if __name__ == '__main__':
 	pass

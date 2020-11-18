@@ -27,7 +27,7 @@ class Manager:
 	def showCctv():
 		print(cctv.Cctv.AllFrame.keys())
 		for i in cctv.Cctv.AllFrame.keys():
-			print(Manager.cekDb()[i-1])
+			#print(Manager.cekDb()[i-1])
 			h = cctv.Cctv(Manager.cekDb()[i-1])
 			t = threading.Thread(target=h.showFrame)
 			t.start()

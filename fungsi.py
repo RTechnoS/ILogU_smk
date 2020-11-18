@@ -20,7 +20,7 @@ def dataB():
 
 dB = dataB()
 #print(dB)
-c = dB.cursor()
+c = dB.cursor(buffered=True)
 
 # def checkCctv(idCam='all'):
 # 	if idCam != 'all':
@@ -52,26 +52,33 @@ def addLog(**data):
 	now = data['waktu'].split(':')	
 	now = timedelta(hours=int(now[0]), minutes=int(now[1]), seconds=int(now[2]))
 
-	__cek = "SELECT * from logSiswa where nama=%s and tanggal=%s and lokasi=%s ORDER BY waktu DESC limit 1"
+	__cek = "SELECT * from logSiswa where nama=%s and tanggal=%s and lokasi=%s ORDER BY waktu DESC limit 0, 1"
 	__cekData = (data['nama'], data['tanggal'], data['lokasi'])
 	c.execute(__cek, __cekData)
-	isData = c.fetchall()
-	if len(isData)<1:
+	isData = c.fetchone()
+	#print(isData)
+	if isData == None:
 		print('++++++++++')
 		__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
 		__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['interaksi'])
 		c.execute(__sqlAdd, __dataSql)
 		dB.commit()
 	else:
+		
 		for i in isData:
-			if (now-i[3]).total_seconds() > 5: 
+			print('sini\r')
+			print(now-i[3])
+			#print((int(now-i[3])).total_seconds())
+			if int((now-i[3]).total_seconds()) > 5: 
 				print('++++++++++')
 				__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
 				__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['interaksi'])
+
 				c.execute(__sqlAdd, __dataSql)
 				dB.commit()
 			else:
-				print('==========')
+				pass
+				#print('==========')
 			
 
 
@@ -83,7 +90,8 @@ class faceDetect:
 			self.model = cv.CascadeClassifier('model/haarcascade_frontalface_default.xml')
 		
 		elif algo == 'dnn':
-			self.model = cv.dnn.readNetFromCaffe('model/bvlc_googlenet.prototxt', 'model/res10_300x300_ssd_iter_140000.caffemodel')
+			self.model = cv.dnn.readNetFromTensorflow('model/opencv_face_detector_uint8.pb', 'model/opencv_face_detector.pbtxt')
+			#self.model = cv.dnn.readNetFromCaffe('model/bvlc_googlenet.prototxt', 'model/res10_300x300_ssd_iter_140000.caffemodel')
 	
 		elif algo == 'mtcnn':
 			from mtcnn.mtcnn import MTCNN
@@ -108,18 +116,18 @@ class faceDetect:
 			
 		return(muka)
 
-	def face_dnn(self, frame, conf=1.0): #1.65
+	def face_dnn(self, frame, conf=0.3): #1.65
 		muka = []
 		h,w = frame.shape[:2]
-		blob = cv.dnn.blobFromImage(cv.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+		blob = cv.dnn.blobFromImage(cv.resize(frame, (300, 300)), conf, (300, 300), [104, 117, 123], False, False)
 		self.model.setInput(blob)
 		detections = self.model.forward()
 
-		for i in range(0, detections.shape[2]):
+		for i in range(detections.shape[2]):
 			confidence = detections[0,0,i,2]
 			if (confidence > conf):
 				x, y, kanan, bawah = (detections[0,0,i,3:7] * np.array([w,h,w,h])).astype('int')
-				muka += [[x, y, kanan-x, bawah-y]]
+				muka += [[x, y, kanan-x, bawah-y]]	
 			#print(confidence)
 		return muka
 
