@@ -5,8 +5,9 @@ from tkinter import messagebox
 # from PIL import Image, ImageTk
 import fungsi
 
-
 font = cv.FONT_HERSHEY_SIMPLEX
+detector = fungsi.faceDetect('haar')
+
 class Mulai:
 	def __init__(self, window):
 		self.win = window
@@ -31,20 +32,18 @@ class Mulai:
 		__frmAwl = tk.Frame(self.__winDaftar)
 		__frmAwl.grid(row=0, column=0, padx=30, pady=20)
 
-		__lblName = tk.Label(__frmAwl, text='Nama = ').grid(row=0, column=1)
-		self.inName = tk.Entry(__frmAwl, textvariable=self.nama).grid(row=0, column=2)
+		tk.Label(__frmAwl, text='Nama = ').grid(row=0, column=1)
+		tk.Entry(__frmAwl, textvariable=self.nama).grid(row=0, column=2)
 		
-		__lblKelas = tk.Label(__frmAwl, text='Kelas = ').grid(row=1, column=1)
-		self.inKelas = tk.Entry(__frmAwl, textvariable=self.kelas).grid(row=1, column=2, pady=5)
+		tk.Label(__frmAwl, text='Kelas = ').grid(row=1, column=1)
+		tk.Entry(__frmAwl, textvariable=self.kelas).grid(row=1, column=2, pady=5)
 
-		self.okBtn = tk.Button(__frmAwl, text='Mulai', command=self.startCap).grid(row=2, column=1, pady=20)
-
+		tk.Button(__frmAwl, text='Mulai', command=self.startCap).grid(row=2, column=1, pady=20)
 		
 
 	def startCap(self):
 		self.__winDaftar.destroy()
 
-		detector = fungsi.faceDetect('haar')
 		#self.cap = cv.VideoCapture('http://192.168.100.242:4747/video')
 		self.cap = cv.VideoCapture('rtsp://192.168.100.242:8080/h264_ulaw.sdp')
 		self.jumlahCap = 0
@@ -57,11 +56,9 @@ class Mulai:
 			_, frame = self.cap.read()
 			if _ == False:
 				continue
-			print(_)
 			
 			frame = cv.flip(frame, 1)			
 			#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-			#gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 				
 			faces = detector.face_haar(frame)
 			#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
@@ -105,4 +102,5 @@ if __name__ == '__main__':
 	aa = tk.Tk()
 	Mulai(aa)
 	aa.mainloop()
+
 cv.destroyAllWindows()

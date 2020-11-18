@@ -1,20 +1,20 @@
 import cv2 as cv
 import fungsi
-import os
-import threading, time
+# import os
+import time
 
 class Cctv:
 	AllFrame = {}
 	def __init__(self, dataCam):
 		#print(dataCam)
-		self.dataCam = dataCam
+		#self.dataCam = dataCam
 		self.idCam, self.namaCCTV, self.name, self.url = dataCam
 		#print(self.url)
 		
 
 	def Mulai(self):
-		if not os.path.isdir(f'dataset/{self.name}'):
-			os.mkdir(f'dataset/{self.name}')
+		# if not os.path.isdir(f'dataset/{self.name}'):
+		# 	os.mkdir(f'dataset/{self.name}')
 		try:
 			self.cam = cv.VideoCapture(self.url)
 		except:
@@ -30,55 +30,54 @@ class Cctv:
 			Cctv.AllFrame[self.idCam] = {'on':True, 'frame':None}
 
 			self.jumlahCap = 0
-			print(self.namaCCTV, 'Kamera Mulai', self.cam.isOpened())
+			print(self.namaCCTV, 'Kamera Mulai')
+
 			self.detector = fungsi.faceDetect('haar') 
 			self.detector2 = fungsi.faceDetect('dnn') # BAKUP
  
 			while Cctv.AllFrame[self.idCam]['on'] == True and self.cam.isOpened():
 				#time.sleep(0.2)
 				_, Cctv.AllFrame[self.idCam]['frame'] = self.cam.read()
-				if _:
-					try:
-						frame = Cctv.AllFrame[self.idCam]['frame']
-						waktu = fungsi.getTime()
-						#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-						frame = cv.resize(frame, (640,480))
+				if _ == False:
+					continue
 
-						cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
-						Cctv.AllFrame[self.idCam]['frame'] =frame
-						#print(frame)
-						#self.gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-						#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
-						#cv.imwrite(nl, frame)
-						self.video_writer.write(frame)
-						#faces = self.detector.face_dnn(frame, conf=0.14)
-						faces = self.detector.face_haar(frame)
+				try:
+					frame = Cctv.AllFrame[self.idCam]['frame']
+					waktu = fungsi.getTime()
+					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
+					#frame = cv.resize(frame, (640,480))
 
-						if len(faces) >= 1:
-							for (x, y, w, h) in faces:
-								#imWajah = frame[y:(y+w), x:(x+w)]
-								#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
-								fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
+					cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
+					Cctv.AllFrame[self.idCam]['frame'] =frame
+					#print(frame)
+					#self.gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
+					#cv.imwrite(nl, frame)
+					self.video_writer.write(frame)
+					#faces = self.detector.face_dnn(frame, conf=0.14)
+					faces = self.detector.face_haar(frame)
 
-								#t.start()
-								#fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
-								#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
-								#cv.imwrite(nl, imWajah)
-								cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=2)
-								#cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
-						else:
-							facesbak =  self.detector2.face_dnn(frame)
-							for (x, y, w, h) in facesbak:
-								fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
-								cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=2)
+					if len(faces) <= 1:
+						faces =  self.detector2.face_dnn(frame)
+
+					for (x, y, w, h) in faces:
+							#imWajah = frame[y:(y+w), x:(x+w)]
+							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
+							fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
+
+							#t.start()
+							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
+							#cv.imwrite(nl, imWajah)
+							cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=2)
+							#cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
 	
-						self.jumlahCap += 1
+					self.jumlahCap += 1
 
-					except Exception as e:
-						print(e)
+				except Exception as e:
+					print(e)
 
-			print('Video Terhenti')
-			#print(dir(self.video_writer))
+			print(self.name, ' Terhenti')
+
 			self.video_writer.release()
 			self.cam.release()
 			
@@ -97,8 +96,10 @@ class Cctv:
 			if Cctv.AllFrame[self.idCam]['frame'] == []:
 				break
 
+			frame = cv.resize(frame, (640,480))
+
 			cv.imshow(self.namaCCTV, frame)
-			#cv.destroyAllWindows()
+
 			if cv.waitKey(20) & 0xFF == 27:
 				break
 

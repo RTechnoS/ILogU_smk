@@ -43,21 +43,23 @@ class Dashboard(Utama):
 		dataBtn = tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=self.dataSiswa).grid(row=0, column=3, padx=15)
 		alertBtn = tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
 		cctvMngrBtn = tk.Button(frameBtn, text='CCTV', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=self.cctvManager).grid(row=0, column=5, padx=15)
-		testBtn = tk.Button(frameBtn, text='testing', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
+		testBtn = tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
 		#self.dash.config(menu=self.menubar)
 		self.dash.mainloop()
 	
 	def alertWin(self):
 		alertWin.Main(self.dash)
-	def cctvManager(self):
-		winCctv = tk.Tk()
-		winCctv.title('Cctv Manager')
-		winCctv.geometry('1080x720')
-		self.statusCctv = tk.StringVar()
 
-		cctvStartBtn = tk.Button(winCctv, text='Start Cctv', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Scctv.Manager.startAll).grid(row=0, column=1, padx=15)
-		cctvStopBtn = tk.Button(winCctv, text='Stop Cctv', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=Scctv.Manager.stopCctv).grid(row=0, column=2, padx=15)
-		cctvShowBtn = tk.Button(winCctv, text='Show Cctv', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=Scctv.Manager.showCctv).grid(row=0, column=3, padx=15)
+	def cctvManager(self):
+		Scctv.Manager()
+		# winCctv = tk.Tk()
+		# winCctv.title('Cctv Manager')
+		# winCctv.geometry('1080x720')
+		# self.statusCctv = tk.StringVar()
+
+		# cctvStartBtn = tk.Button(winCctv, text='Start Cctv', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Scctv.Manager.startAll).grid(row=0, column=1, padx=15)
+		# cctvStopBtn = tk.Button(winCctv, text='Stop Cctv', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=Scctv.Manager.stopCctv).grid(row=0, column=2, padx=15)
+		# cctvShowBtn = tk.Button(winCctv, text='Show Cctv', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=Scctv.Manager.showCctv).grid(row=0, column=3, padx=15)
 		#statusLbl = tk.Label(self.frameAwal, textvariable=self.statusCctv).grid(row=0, column=3, padx=15)
 
 	def logSiswa(self):
@@ -73,7 +75,25 @@ class Dashboard(Utama):
 		hasil = fungsi.checkCctv()
 
 	def testCmd(self):
-		for i in range(1000):
-			fungsi.addLog(nama='Rusman', tanggal=fungsi.getTime('hari'), waktu=fungsi.getTime('jam'), lokasi='kantin1', terdekat='', interaksi='makan')
+		#exit()
+		import random, datetime
+		namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
+
+		for i in range(20000):
+			nama = random.choice(namaFake)
+			lks = random.choice(['kantin1', 'xiimm1', 'xiitkj1', 'kantin2', 'lapangan'])
+			aks = random.choice(['salaman', 'tos', 'berpelukan'])
+
+			hari = random.randrange(1,20)
+
+			tgl = f"2020-01-{hari}"
+
+			jam = random.randrange(7,16)
+			akhir = random.randrange(1,30)
+			detik = random.randrange(1,60)
+
+			jam = datetime.timedelta(hours=jam, minutes=akhir, seconds=detik)
+			fungsi.addLog(nama=nama, tanggal=tgl, waktu=str(jam), lokasi=lks, terdekat=random.choice(namaFake), interaksi=aks)
+			print(i)
 
 Dashboard(tk.Tk())

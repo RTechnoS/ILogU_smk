@@ -2,7 +2,8 @@ import tkinter as tk
 import fungsi
 from tkinter import ttk
 
-#haha tes
+__mydb = fungsi.dB
+c = fungsi.c
 
 class Mulai:
 	def __init__(self, win):
@@ -51,12 +52,9 @@ class logSiswa(Mulai):
 		self.win.title('Log Siswa')
 
 	def updateData(self):
-		__mydb = fungsi.dB
-		self.c = fungsi.c
-		__sql = "SELECT * from logSiswa"
-		self.c.execute(__sql)
-		self.isData = self.c.fetchall()
-		self.countData = self.c.rowcount
+		c.execute("SELECT * from logSiswa")
+		self.isData = c.fetchall()
+		self.countData = c.rowcount
 
 class dataSiswa(Mulai):
 	def __init__(self,win):
@@ -67,12 +65,8 @@ class dataSiswa(Mulai):
 		self.win.title('Data Siswa')
 
 	def updateData(self):
-		__mydb = fungsi.dB
-		self.c = fungsi.c
-		__sql = "SELECT * from dataSiswa"
-		self.c.execute(__sql)
-		self.isData = self.c.fetchall()
-		print(self.isData)
-		self.countData = self.c.rowcount
+		c.execute("SELECT * from dataSiswa")
+		self.isData = c.fetchall()
+		self.countData = c.rowcount
 	#def __init__(self):
 

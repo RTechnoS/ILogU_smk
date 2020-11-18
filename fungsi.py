@@ -9,7 +9,7 @@ def dataB():
 		__mydb = db.connect(
 			host='localhost',
 			user='root',
-			passwd='',
+			passwd='root',
 			db='covidtrack'	
 		)
 		if __mydb.is_connected():
@@ -19,7 +19,6 @@ def dataB():
 		print('Ada Masalah pada database')
 
 dB = dataB()
-#print(dB)
 c = dB.cursor(buffered=True)
 
 # def checkCctv(idCam='all'):
