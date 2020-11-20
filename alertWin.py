@@ -63,7 +63,7 @@ class Main:
 				
 		
 		dataLog = pd.DataFrame(Main.logTeman, columns=col)
-		print('Yanng pernah bertemu', dataLog.Nama.unique())
+		print('Yang pernah bertemu', dataLog.Nama.unique())
 		print(dataLog.Nama.value_counts())
 				#print(dataLog.Nama.value_counts())
 				#nama = []
