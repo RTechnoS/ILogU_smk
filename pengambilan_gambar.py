@@ -45,7 +45,7 @@ class Mulai:
 		self.__winDaftar.destroy()
 
 		#self.cap = cv.VideoCapture('http://192.168.100.242:4747/video')
-		self.cap = cv.VideoCapture('rtsp://192.168.100.242:8080/h264_ulaw.sdp')
+		self.cap = cv.VideoCapture(0)
 		self.jumlahCap = 0
 		nama = (self.nama.get()).replace(' ', '_')
 		if not os.path.isdir(f'dataset/{nama}'):

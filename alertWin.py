@@ -50,9 +50,9 @@ class Main:
 		self.periksaTeman()
 	
 	def periksaTeman(self):
-		col = ['id', 'Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Aksi']
+		col = ['id', 'Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Coor']
 		for log in Main.logKorban:
-			idLog ,nama, tanggal, waktu, lokasi, terdekat, aksi = log
+			idLog ,nama, tanggal, waktu, lokasi, terdekat, coor = log
 			#print(str(waktu))
 			__sql = "SELECT * from logSiswa where nama!='{}' and tanggal='{}' and lokasi='{}' and waktu like '%{}%' ORDER BY waktu ASC".format(self.namaKorban.get() ,tanggal,lokasi,':'.join(str(waktu).split(':')[0:-1]))
 			#print("SELECT * from logSiswa where tanggal={} and lokasi={} and waktu like '%{}%' ORDER BY waktu ASC".format(tanggal,lokasi,':'.join(str(waktu).split(':')[0:-1])))
@@ -73,7 +73,7 @@ class Main:
 				# 	nama.append(dttmn[1])
 				# print(nama)
 
-				#print(idLog ,nama, tanggal, waktu, lokasi, terdekat, aksi)
+				#print(idLog ,nama, tanggal, waktu, lokasi, terdekat, coor)
 
 
 

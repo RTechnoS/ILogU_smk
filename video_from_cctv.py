@@ -4,7 +4,6 @@ import fungsi
 import fungsi_camera 
 import time, random
 
-namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
 
 class Cctv:
 	AllFrame = {}
@@ -21,15 +20,15 @@ class Cctv:
 		try:
 			self.cam = cv.VideoCapture(self.url)
 		except:
-			exit()
+			print('Ada Error saat membuka kamera')
 
 		if self.cam.isOpened():
-			w = int(self.cam.get(cv.CAP_PROP_FRAME_WIDTH))
-			h = int(self.cam.get(cv.CAP_PROP_FRAME_HEIGHT))
+			wCam = int(self.cam.get(cv.CAP_PROP_FRAME_WIDTH))
+			hCam = int(self.cam.get(cv.CAP_PROP_FRAME_HEIGHT))
 			fourcc = cv.VideoWriter_fourcc(*'XVID')
 			hari = fungsi.getTime('hari')
 			nama = hari+'_'+self.namaCCTV
-			self.video_writer = cv.VideoWriter(f"rekaman/{nama}.mkv", fourcc, 25, (w, h))
+			self.video_writer = cv.VideoWriter(f"rekaman/{nama}.mkv", fourcc, 25, (wCam, hCam))
 			Cctv.AllFrame[self.idCam] = {'on':True, 'frame':None}
 
 			self.jumlahCap = 0
@@ -51,34 +50,46 @@ class Cctv:
 					#frame = cv.resize(frame, (640,480))
 
 					cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
-					Cctv.AllFrame[self.idCam]['frame'] =frame
+					#Cctv.AllFrame[self.idCam]['frame'] =frame
 					#print(frame)
 					#self.gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
 					#cv.imwrite(nl, frame)
 					self.video_writer.write(frame)
 					#faces = self.detector.face_dnn(frame, conf=0.14)
-					faces =  self.detector2.face_dnn(frame)
+					faces = self.detector2.face_dnn(frame)
 
 					if len(faces) < 1:
 						faces = self.detector.face_haar(frame)
 
-					if len(faces) >= 1:
-						jarak = fungsi_camera.Jarak(faces)
-					#fces = []#fungsi_camera.jarakwajah(faces)
+					fces = []
 					for (x, y, w, h) in faces:
+							kanan, bawah = (x+w, y+h)
 							#imWajah = frame[y:(y+w), x:(x+w)]
 							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
-							
-							fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan')
-							if len(faces) > 1:
-								jarak.jarakwajah([x,y,x+w,y+h, random.choice(namaFake)])
+							face_frame = frame[y:bawah, x:kanan]
+							wajah = fungsi_camera.faceRecog.recog(face_frame)
+							fces.append([x, y, kanan, bawah, wajah])
+
+							# if len(faces) > 1:
+							# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 							#t.start()
 							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
 							#cv.imwrite(nl, imWajah)
-							cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=2)
+							cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
 							#cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
 					
+					if len(fces) > 1:
+						jarak = fungsi_camera.Jarak(faces)
+
+					for wajah in fces:
+						nearby = ''
+						if len(fces) > 1:
+							nearby = jarak.jarakwajah(wajah)
+
+						fungsi.addLog(nama=wajah[4], tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=','.join(wajah[:-1]))
+
+
 					self.jumlahCap += 1
 
 				except Exception as e:

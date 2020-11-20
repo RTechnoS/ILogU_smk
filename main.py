@@ -79,11 +79,13 @@ class Dashboard(Utama):
 		import random, datetime
 		namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
 
-		for i in range(20000):
+		for i in range(1000):
 			nama = random.choice(namaFake)
 			lks = random.choice(['kantin1', 'xiimm1', 'xiitkj1', 'kantin2', 'lapangan'])
 			aks = random.choice(['salaman', 'tos', 'berpelukan'])
-
+			nea = random.choice(namaFake)+','+random.choice(namaFake)
+			coo = '12,34,31,22'
+			print(nea)
 			hari = random.randrange(1,20)
 
 			tgl = f"2020-01-{hari}"
@@ -93,7 +95,7 @@ class Dashboard(Utama):
 			detik = random.randrange(1,60)
 
 			jam = datetime.timedelta(hours=jam, minutes=akhir, seconds=detik)
-			fungsi.addLog(nama=nama, tanggal=tgl, waktu=str(jam), lokasi=lks, terdekat=random.choice(namaFake), interaksi=aks)
+			fungsi.addLog(nama=nama, tanggal=tgl, waktu=str(jam), lokasi=lks, terdekat=nea, coor=coo)
 			print(i)
 
 Dashboard(tk.Tk())

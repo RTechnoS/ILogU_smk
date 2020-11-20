@@ -45,8 +45,8 @@ class Mulai:
 
 class logSiswa(Mulai):
 	def __init__(self,win):
-		self.indexData = ('id','nama','tanggal', 'waktu', 'lokasi', 'terdekat', 'interaksi')
-		self.textData = ('No','Nama','Tanggal', 'Jam', 'Lokasi', 'Terdekat', 'Interaksi')
+		self.indexData = ('id','nama','tanggal', 'waktu', 'lokasi', 'terdekat', 'coor')
+		self.textData = ('No','Nama','Tanggal', 'Jam', 'Lokasi', 'Terdekat', 'Kordinat')
 		self.ukuranList = (30, 175, 125, 140, 150, 180, 150)
 		super().__init__(win)
 		self.win.title('Log Siswa')

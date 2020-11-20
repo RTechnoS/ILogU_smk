@@ -26,9 +26,10 @@ class Manager:
 	def startAll():
 		for i in Manager.cekDb():
 			print(i)
-			h = cctv.Cctv(i)
-			t = threading.Thread(target=h.Mulai)
-			t.start()
+			if i[0] in cctv.Cctv.AllFrame and cctv.Cctv.AllFrame[i[0]]['on'] != True:
+				h = cctv.Cctv(i)
+				t = threading.Thread(target=h.Mulai)
+				t.start()
 
 	def stopCctv():
 		for i in cctv.Cctv.AllFrame.keys():

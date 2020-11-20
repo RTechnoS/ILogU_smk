@@ -9,7 +9,7 @@ def dataB():
 	__mydb = db.connect(
 			host='localhost',
 			user='root',
-			passwd='Smkn1.Bkl',
+			passwd='root',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)
@@ -20,7 +20,6 @@ def dataB():
 	# 	print('Ada Masalah pada database')
 
 dB = dataB()
-print(dB)
 c = dB.cursor(buffered=True)
 
 # def checkCctv(idCam='all'):
@@ -59,8 +58,8 @@ def addLog(**data):
 	isData = c.fetchone()
 	if isData == None:
 		print('++++++++++')
-		__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
-		__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['interaksi'])
+		__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
+		__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
 		c.execute(__sqlAdd, __dataSql)
 		dB.commit()
 	else:
@@ -68,8 +67,8 @@ def addLog(**data):
 		# print(now.total_seconds()-isData[3].total_seconds())
 		if (now.total_seconds()-isData[3].total_seconds()) > 8: 
 			print('++++++++++')
-			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, interaksi) VALUES (%s,%s,%s,%s,%s,%s)'
-			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['interaksi'])
+			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
+			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
 			c.execute(__sqlAdd, __dataSql)
 			dB.commit()
 		else:
