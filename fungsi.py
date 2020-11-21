@@ -110,7 +110,7 @@ class faceDetect:
 			
 		return(muka)
 
-	def face_dnn(self, frame, conf=0.14): #1.65
+	def face_dnn(self, frame, conf=0.135): #1.65
 		muka = []
 		h,w = frame.shape[:2]
 		blob = cv.dnn.blobFromImage(cv.resize(frame, (300, 300)), conf, (300, 300), [104, 117, 123], False, False)

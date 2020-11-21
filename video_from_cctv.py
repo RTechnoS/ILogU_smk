@@ -43,11 +43,11 @@ class Cctv:
 				if _ == False:
 					continue
 
-				if 1 + 1 ==2: #try
+				try:
 					frame = Cctv.AllFrame[self.idCam]['frame']
 					waktu = fungsi.getTime()
 					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-					#frame = cv.resize(frame, (640,480))
+					frame = cv.resize(frame, (640,480))
 
 					#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
 					#Cctv.AllFrame[self.idCam]['frame'] =frame
@@ -92,8 +92,8 @@ class Cctv:
 
 					self.jumlahCap += 1
 
-				# except Exception as e:
-				# 	print(e)
+				except Exception as e:
+					print(e)
 
 			print(self.name, ' Terhenti')
 
