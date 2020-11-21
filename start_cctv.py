@@ -25,11 +25,14 @@ class Manager:
 
 	def startAll():
 		for i in Manager.cekDb():
-			print(i)
-			if i[0] in cctv.Cctv.AllFrame and cctv.Cctv.AllFrame[i[0]]['on'] != True:
+			idCam = i[0]
+			if idCam not in cctv.Cctv.AllFrame or cctv.Cctv.AllFrame[idCam]['on'] != True:
+				print(i)
 				h = cctv.Cctv(i)
 				t = threading.Thread(target=h.Mulai)
 				t.start()
+			else:
+				print('Camera', idCam, 'sudah aktif')
 
 	def stopCctv():
 		for i in cctv.Cctv.AllFrame.keys():

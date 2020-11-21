@@ -57,7 +57,7 @@ class Mulai:
 			if _ == False:
 				continue
 			
-			frame = cv.flip(frame, 1)			
+			frame = cv.flip(frame, 1)
 			#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
 				
 			faces = detector.face_haar(frame)

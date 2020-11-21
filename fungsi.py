@@ -9,7 +9,7 @@ def dataB():
 	__mydb = db.connect(
 			host='localhost',
 			user='root',
-			passwd='root',
+			passwd='',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)
@@ -94,7 +94,7 @@ class faceDetect:
 
 
 
-	def face_haar(self, frame, scale=1.3, minSize=(2,2)):
+	def face_haar(self, frame, scale=1.3, minSize=(3,3)):
 
 		muka = []
 		gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
