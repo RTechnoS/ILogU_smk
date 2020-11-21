@@ -66,29 +66,28 @@ class Cctv:
 					for (x, y, w, h) in faces:
 							kanan, bawah = (x+w, y+h)
 							#imWajah = frame[y:(y+w), x:(x+w)]
-							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, Terhentidekat='', interaksi='makan'))
+							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
 							face_frame = frame[y:bawah, x:kanan]
-							#wajah = fungsi_camera.faceRecog.recog(face_frame)
-							#fces.append([x, y, kanan, bawah, wajah])
+							wajah = fungsi_camera.faceRecog.recog(face_frame)
+							fces.append([x, y, kanan, bawah, wajah])
 
 							# if len(faces) > 1:
 							# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 							#t.start()
 							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
-							fungsi.addLog(nama='s', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='a,a', coor='')
 							#cv.imwrite(nl, imWajah)
 							cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=1)
 							#cv.putText(frame, wajah,(x, y-25), cv.FONT_HERSHEY_SIMPLEX, fontScale=1,thickness=1, color=(15,15, 249))
 					
-					# if len(fces) > 1:
-					# 	jarak = fungsi_camera.Jarak(fces)
+					if len(fces) > 1:
+						jarak = fungsi_camera.Jarak(fces)
 
-					# for wajah in fces:
-					# 	nearby = ''
-					# 	if len(fces) > 1:
-					# 		nearby = jarak.jarakwajah(wajah)
+					for wajah in fces:
+						nearby = ''
+						if len(fces) > 1:
+							nearby = jarak.jarakwajah(wajah)
 
-					# 	fungsi.addLog(nama=wajah[4], tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str(wajah))
+						fungsi.addLog(nama=wajah[4], tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str(wajah))
 						#m.start()
 
 					self.jumlahCap += 1
