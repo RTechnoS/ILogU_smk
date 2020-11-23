@@ -52,11 +52,11 @@ def addLog(**data):
 	now = data['waktu'].split(':')	
 	now = timedelta(hours=int(now[0]), minutes=int(now[1]), seconds=int(now[2]))
 
-	__cek = "SELECT * from logSiswa where nama=%s and tanggal=%s and lokasi=%s ORDER BY waktu DESC limit 0, 1"
+	__cek = "SELECT * from logSiswa where nama=%s and tanggal=%s and lokasi=%s ORDER BY waktu DESC limit 1"
 	__cekData = (data['nama'], data['tanggal'], data['lokasi'])
 	c.execute(__cek, __cekData)
 	isData = c.fetchone()
-	if isData == None:
+	if len(isData) == 0:
 		print('++++++++++')
 		__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
 		__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
@@ -65,7 +65,7 @@ def addLog(**data):
 	else:
 		# print(now)
 		# print(now.total_seconds()-isData[3].total_seconds())
-		if (now.total_seconds()-isData[3].total_seconds()) > 8: 
+		if (now.total_seconds()-isData[3].total_seconds()) >= 8:
 			print('++++++++++')
 			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
 			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
@@ -94,7 +94,7 @@ class faceDetect:
 
 
 
-	def face_haar(self, frame, scale=1.3, minSize=(3,3)):
+	def face_haar(self, frame, scale=1.3, minSize=(2,2)):
 
 		muka = []
 		gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)

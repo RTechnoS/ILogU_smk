@@ -29,9 +29,9 @@ class Cctv:
 			hari = fungsi.getTime('hari')
 			nama = hari+'_'+self.namaCCTV
 			self.video_writer = cv.VideoWriter(f"rekaman/{nama}.mkv", fourcc, 25, (wCam, hCam))
-			Cctv.AllFrame[self.idCam] = {'on':True, 'frame':None}
+			Cctv.AllFrame[self.idCam] = {'on':True, 'frame':[]}
 
-			self.jumlahCap = 0
+			#self.jumlahCap = 0
 			print(self.namaCCTV, 'Kamera Mulai')
 
 			self.detector = fungsi.faceDetect('haar') 
@@ -40,62 +40,67 @@ class Cctv:
 			while Cctv.AllFrame[self.idCam]['on'] == True and self.cam.isOpened():
 				#time.sleep(0.05)
 				_, Cctv.AllFrame[self.idCam]['frame'] = self.cam.read()
-				if _ == False:
-					continue
+				# if _ == False:
+				# 	continue
 
-				try:
+				#try:
+				if 1+1 == 2:
 					frame = Cctv.AllFrame[self.idCam]['frame']
 					waktu = fungsi.getTime()
 					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-					frame = cv.resize(frame, (640,480))
+					frame = cv.resize(Cctv.AllFrame[self.idCam]['frame'], (640,480))
+
 
 					#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
-					#Cctv.AllFrame[self.idCam]['frame'] =frame
+					#Cctv.AllFrame[self.idCam]['frame'] = frame
 					#print(frame)
 					#self.gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
 					#cv.imwrite(nl, frame)
 					self.video_writer.write(frame)
-					#faces = self.detector.face_dnn(frame, conf=0.14)
-					faces = self.detector.face_haar(frame)
+					#self.faces = self.detector.face_dnn(frame, conf=0.14)
+					self.faces = self.detector.face_haar(frame)
 
-					if len(faces) < 1:
-						faces = self.detector2.face_dnn(frame)
+					if len(self.faces) < 1:
+						self.faces = self.detector2.face_dnn(frame)
 
-					fces = []
-					for (x, y, w, h) in faces:
+					self.fces = []
+					for (x, y, w, h) in self.faces:
 							kanan, bawah = (x+w, y+h)
+
+							cv.rectangle(Cctv.AllFrame[self.idCam]['frame'], (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
 							#imWajah = frame[y:(y+w), x:(x+w)]
 							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
 							face_frame = frame[y:bawah, x:kanan]
 							wajah = fungsi_camera.faceRecog.recog(face_frame)
-							fces.append([x, y, kanan, bawah, wajah])
+							self.fces.append([x, y, kanan, bawah, wajah])
 
-							# if len(faces) > 1:
+							# if len(self.faces) > 1:
 							# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 							#t.start()
 							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
 							#cv.imwrite(nl, imWajah)
-							cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=1)
+							
 							#cv.putText(frame, wajah,(x, y-25), cv.FONT_HERSHEY_SIMPLEX, fontScale=1,thickness=1, color=(15,15, 249))
 					
-					if len(fces) > 1:
-						jarak = fungsi_camera.Jarak(fces)
+					if len(self.fces) > 1:
+						jarak = fungsi_camera.Jarak(self.fces)
 
-					for wajah in fces:
+					for wajah in self.fces:
 						nearby = ''
-						if len(fces) > 1:
+						if len(self.fces) > 1:
 							nearby = jarak.jarakwajah(wajah)
 
 						fungsi.addLog(nama=wajah[4], tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str(wajah))
 						#m.start()
 
-					self.jumlahCap += 1
+					#self.jumlahCap += 1
 
-				except Exception as e:
-					print(e)
+				# except Exception as e:
+				# 	print(e)
 
 			print(self.name, ' Terhenti')
+			Cctv.AllFrame[self.idCam] = {'on':True, 'frame':[]}
 
 			self.video_writer.release()
 			self.cam.release()
@@ -109,8 +114,8 @@ class Cctv:
 	def showFrame(self):
 		# print(self.idCam)
 		#print(Cctv.AllFrame[self.idCam]['on'])
-		while Cctv.AllFrame[self.idCam]['on']:
-			#print(frame)			
+
+		while Cctv.AllFrame[self.idCam]['on']:	
 			if Cctv.AllFrame[self.idCam]['frame'] == []:
 				print('error')
 				Cctv.AllFrame[self.idCam]['on'] = False
