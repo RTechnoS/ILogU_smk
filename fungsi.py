@@ -9,7 +9,7 @@ def dataB():
 	__mydb = db.connect(
 			host='localhost',
 			user='root',
-			passwd='',
+			passwd='root',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)

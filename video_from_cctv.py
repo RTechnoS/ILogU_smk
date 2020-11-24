@@ -25,10 +25,10 @@ class Cctv:
 		if self.cam.isOpened():
 			wCam = int(self.cam.get(cv.CAP_PROP_FRAME_WIDTH))
 			hCam = int(self.cam.get(cv.CAP_PROP_FRAME_HEIGHT))
-			fourcc = cv.VideoWriter_fourcc(*'XVID')
+			# fourcc = cv.VideoWriter_fourcc(*'XVID')
 			hari = fungsi.getTime('hari')
 			nama = hari+'_'+self.namaCCTV
-			self.video_writer = cv.VideoWriter(f"rekaman/{nama}.mkv", fourcc, 25, (wCam, hCam))
+			self.video_writer = cv.VideoWriter(f"rekaman/{nama}.mkv", cv.VideoWriter_fourcc(*'XVID'), 25, (wCam, hCam))
 			Cctv.AllFrame[self.idCam] = {'on':True, 'frame':[]}
 
 			#self.jumlahCap = 0
@@ -58,14 +58,14 @@ class Cctv:
 					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
 					#cv.imwrite(nl, frame)
 					self.video_writer.write(frame)
-					#self.faces = self.detector.face_dnn(frame, conf=0.14)
-					self.faces = self.detector.face_haar(frame)
+					#faces = self.detector.face_dnn(frame, conf=0.14)
+					faces = self.detector.face_haar(frame)
 
-					if len(self.faces) < 1:
-						self.faces = self.detector2.face_dnn(frame)
+					if len(faces) < 1:
+						faces = self.detector2.face_dnn(frame)
 
-					self.fces = []
-					for (x, y, w, h) in self.faces:
+					fces = []
+					for (x, y, w, h) in faces:
 							kanan, bawah = (x+w, y+h)
 
 							cv.rectangle(Cctv.AllFrame[self.idCam]['frame'], (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
@@ -73,9 +73,9 @@ class Cctv:
 							#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
 							face_frame = frame[y:bawah, x:kanan]
 							wajah = fungsi_camera.faceRecog.recog(face_frame)
-							self.fces.append([x, y, kanan, bawah, wajah])
+							fces.append([x, y, kanan, bawah, wajah])
 
-							# if len(self.faces) > 1:
+							# if len(faces) > 1:
 							# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 							#t.start()
 							#nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
@@ -83,12 +83,12 @@ class Cctv:
 							
 							#cv.putText(frame, wajah,(x, y-25), cv.FONT_HERSHEY_SIMPLEX, fontScale=1,thickness=1, color=(15,15, 249))
 					
-					if len(self.fces) > 1:
-						jarak = fungsi_camera.Jarak(self.fces)
+					if len(fces) > 1:
+						jarak = fungsi_camera.Jarak(fces)
 
-					for wajah in self.fces:
+					for wajah in fces:
 						nearby = ''
-						if len(self.fces) > 1:
+						if len(fces) > 1:
 							nearby = jarak.jarakwajah(wajah)
 
 						fungsi.addLog(nama=wajah[4], tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str(wajah))
