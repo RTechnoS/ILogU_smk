@@ -26,7 +26,7 @@ class Manager:
 	def startAll():
 		for i in Manager.cekDb():
 			idCam = i[0]
-			if idCam not in cctv.Cctv.AllFrame or cctv.Cctv.AllFrame[idCam]['on'] != True:
+			if idCam not in cctv.Cctv.AllFrame or cctv.Cctv.AllFrame[idCam][1] != True:
 				print(i)
 				h = cctv.Cctv(i)
 				t = threading.Thread(target=h.Mulai)

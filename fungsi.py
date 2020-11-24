@@ -1,39 +1,30 @@
-import time
+import time, random
 import mysql.connector as db
 import cv2 as cv
 import numpy as np
 from datetime import timedelta
 
+namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
+#mysql_conn = None
+
 def dataB():
 	# try:
-	__mydb = db.connect(
+	#global mysql_conn
+	mysql_conn = db.connect(
 			host='localhost',
 			user='root',
 			passwd='root',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)
-	if __mydb.is_connected():
-		return __mydb
-				
+	# if mysql_conn.is_connected():
+	# 	return mysql_conn
+	return mysql_conn
 	# except:
 	# 	print('Ada Masalah pada database')
 
 dB = dataB()
 c = dB.cursor(buffered=True)
-
-# def checkCctv(idCam='all'):
-# 	if idCam != 'all':
-# 		if idCama in cctv.Cctv.AllFrame:
-# 			return f'{idCam} Sedang aktif'
-# 		else:
-# 			return f'{idCam} Tidak aktif'
-		
-# 	else:
-# 		cek = cctv.Cctv.AllFrame
-# 		print(cek.keys())
-# 		return cek.keys()
-		
 
 def getTime(apa='all'):
 	if apa == 'jam':
@@ -45,32 +36,37 @@ def getTime(apa='all'):
 
 	return data
 
-#def tambahLog():
 
 
 def addLog(**data):
+	
+	dBB = dataB()
+	cc = dBB.cursor(buffered=True)
+
 	now = data['waktu'].split(':')	
 	now = timedelta(hours=int(now[0]), minutes=int(now[1]), seconds=int(now[2]))
 
 	__cek = "SELECT * from logSiswa where nama=%s and tanggal=%s and lokasi=%s ORDER BY waktu DESC limit 1"
 	__cekData = (data['nama'], data['tanggal'], data['lokasi'])
-	c.execute(__cek, __cekData)
-	isData = c.fetchone()
-	if len(isData) == 0:
+	cc.execute(__cek, __cekData)
+	isData = cc.fetchone()
+	#print(isData)
+	if isData == None:
 		print('++++++++++')
 		__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
 		__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
-		c.execute(__sqlAdd, __dataSql)
-		dB.commit()
+		cc.execute(__sqlAdd, __dataSql)
+		dBB.commit()
 	else:
 		# print(now)
 		# print(now.total_seconds()-isData[3].total_seconds())
 		if (now.total_seconds()-isData[3].total_seconds()) >= 8:
-			print('++++++++++')
+			
 			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
 			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
-			c.execute(__sqlAdd, __dataSql)
-			dB.commit()
+			cc.execute(__sqlAdd, __dataSql)
+			dBB.commit()
+			print('++++++++++')
 		else:
 			pass
 			#print('==========')
@@ -78,8 +74,8 @@ def addLog(**data):
 
 
 class faceDetect:
-	def __init__(self, algo='haar'):
-		#self.algo = algo
+	def __init__(self, algo='haar', pengenalan=False):
+		self.pengenalan = pengenalan
 
 		if algo == 'haar':
 			self.model = cv.CascadeClassifier('model/haarcascade_frontalface_default.xml')
@@ -106,7 +102,11 @@ class faceDetect:
 			minSize=minSize
 		)
 		for (x,y,w,h) in faces:
-			muka += [[x,y,w,h]]
+			if self.pengenalan:
+				wajah = self.recogWajah(frame[y:y+h, x:x+w])
+				muka += [[x,y,w,h,wajah]]
+			else:
+				muka += [[x,y,w,h]]
 			
 		return(muka)
 
@@ -121,8 +121,13 @@ class faceDetect:
 			confidence = detections[0,0,i,2]
 			if (confidence > conf):
 				x, y, kanan, bawah = (detections[0,0,i,3:7] * np.array([w,h,w,h])).astype('int')
-				muka += [[x, y, kanan-x, bawah-y]]	
-			#print(confidence)
+
+				if self.pengenalan:
+					wajah = self.recogWajah(frame[y:kanan, x:bawah])
+					muka += [[x, y, kanan-x, bawah-y, wajah]]
+				else:
+					muka += [[x, y, kanan-x, bawah-y]]	
+
 		return muka
 
 	def face_mtcnn(self, frame):
@@ -131,9 +136,19 @@ class faceDetect:
 		for face in faces:
 			#print(face['box'])
 			x,y,w,h = face['box']
-			muka += [[x,y,w,h]]
+
+			if self.pengenalan:
+				wajah = self.recogWajah(frame[y:y+h, x:x+w])
+				muka += [[x,y,w,h,wajah]]
+			else:
+				muka += [[x,y,w,h]]
+
 			
 		return muka
+
+	def recogWajah(self, wajah):
+		nama = random.choice(namaFake)
+		return nama
 
 
 

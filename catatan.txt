@@ -1,0 +1,13 @@
+menghapus self. pada faces dan fces di video_from cctv
+
+incude pengenalan wajah pada deteksi wajah(agar lebih cepat) dalam satu fungsi, merombak kode untk memanggil deteksi jarak pada video_from_cctv , ubah tipe data frame dan on/off dari dict menjadi list (beta semua, belum dicoba), memperbaki addLog untuk multi thread, menambahkan file percobaan_pandas untuk di pakai di alert, dan menambah file catatan
+
+
+
+
+
+
+
+Ubah {1:{'frame':[], 'on':True}}
+
+menjadi {1:[frame, on/off]}

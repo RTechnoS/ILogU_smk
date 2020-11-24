@@ -2,14 +2,6 @@ import numpy as np
 import pandas as pd
 import random
 
-namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
-
-
-class faceRecog:
-	def recog(frame):
-		nama = random.choice(namaFake)
-		return nama
-
 class Jarak:
 	def __init__(self, faces):
 		self.faces = faces
