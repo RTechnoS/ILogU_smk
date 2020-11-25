@@ -6,7 +6,8 @@ def tambah():
 	for i in range(10000):
 		nama = random.choice(namaFake)
 		lks = random.choice(['kantin1', 'xiimm1', 'xiitkj1', 'kantin2', 'lapangan'])
-		nea = random.choice(namaFake)+','+random.choice(namaFake)
+		neaa = random.choice(namaFake)+','+random.choice(namaFake)
+		nea = random.choice((neaa, '', random.choice(namaFake)))
 		coo = '12,34,31,22'
 		print(nea)
 		hari = random.randrange(1,20)
