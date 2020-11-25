@@ -3,7 +3,7 @@ import fungsi, threading
 namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
 
 def tambah():
-	for i in range(5000):
+	for i in range(10000):
 		nama = random.choice(namaFake)
 		lks = random.choice(['kantin1', 'xiimm1', 'xiitkj1', 'kantin2', 'lapangan'])
 		nea = random.choice(namaFake)+','+random.choice(namaFake)

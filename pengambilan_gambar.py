@@ -2,8 +2,9 @@ import cv2 as cv
 import os, fungsi
 import tkinter as tk
 from tkinter import messagebox
+
 # from PIL import Image, ImageTk
-import fungsi
+import fungsi, time
 
 font = cv.FONT_HERSHEY_SIMPLEX
 detector = fungsi.faceDetect('haar')
@@ -44,16 +45,19 @@ class Mulai:
 	def startCap(self):
 		self.__winDaftar.destroy()
 
-		#self.cap = cv.VideoCapture('http://192.168.100.242:4747/video')
-		self.cap = cv.VideoCapture(0)
+		self.cap = cv.VideoCapture('http://192.168.1.29:4747/video')
+		#self.cap = cv.VideoCapture(0)
 		self.jumlahCap = 0
 		nama = (self.nama.get()).replace(' ', '_')
 		if not os.path.isdir(f'dataset/{nama}'):
 			os.mkdir(f'dataset/{nama}')
 
+
 		while True:
 			#waktu = fungsi.getTime('all')
+
 			_, frame = self.cap.read()
+
 			if _ == False:
 				break
 			
@@ -72,6 +76,7 @@ class Mulai:
 				self.jumlahCap += 1
 
 			cv.imshow('Perekaman', frame)
+			time.sleep(0.3)
 			#print(self.__winCap.state())
 
 			if self.jumlahCap <= 100:
@@ -96,7 +101,7 @@ class Mulai:
 				messagebox.showinfo('Succes', "Wajah Berhasil ditambahkan")
 			
 
-		startImage()
+		#startImage()
 
 if __name__ == '__main__':
 	aa = tk.Tk()

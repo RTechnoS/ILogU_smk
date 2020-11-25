@@ -34,8 +34,8 @@ class Cctv:
 			#self.jumlahCap = 0
 			print(self.namaCCTV, 'Kamera Mulai')
 
-			self.detector = fungsi.faceDetect('haar', penganalan=True) 
-			self.detector2 = fungsi.faceDetect('dnn', penganalan=True) # BAKUP
+			self.detector = fungsi.faceDetect('haar', pengenalan=True) 
+			self.detector2 = fungsi.faceDetect('dnn', pengenalan=True) # BAKUP
  
 			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened():
 				#time.sleep(0.05)
@@ -93,16 +93,6 @@ class Cctv:
 							
 						#cv.putText(frame, wajah,(x, y-25), cv.FONT_HERSHEY_SIMPLEX, fontScale=1,thickness=1, color=(15,15, 249))
 					
-					# if len(fces) > 1:
-					# 	jarak = fungsi_camera.Jarak(fces)
-
-					# for wajah in fces:
-					# 	nearby = ''
-					# 	if len(fces) > 1:
-					# 		nearby = jarak.jarakwajah(wajah)
-
-					# 	fungsi.addLog(nama=wajah[4], tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str(wajah))
-					# 	#m.start()
 
 					#self.jumlahCap += 1
 
