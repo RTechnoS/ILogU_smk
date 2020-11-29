@@ -12,8 +12,8 @@ def dataB():
 	#global mysql_conn
 	mysql_conn = db.connect(
 			host='192.168.100.10',
-			user='root',
-			passwd='Smkn1.Bkl',
+			user='Smkn1.Bkl',
+			passwd='root',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)
