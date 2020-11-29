@@ -64,7 +64,7 @@ class Cctv:
 						faces = self.detector2.face_dnn(frame)
 
 					if len(faces) > 1:
-						jarak = fungsi_camera.Jarak(faces)
+						jarak = fungsi.Jarak(faces)
 
 					#fces = []
 					for (x, y, w, h, wajah) in faces:
