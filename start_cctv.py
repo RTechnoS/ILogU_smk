@@ -44,7 +44,7 @@ class Manager:
 		for i in cctv.Cctv.AllFrame.keys():
 			#print(Manager.cekDb()[i-1])
 			print('sini ', i)
-			print(Manager.cekDb())
+
 			h = cctv.Cctv(Manager.cekDb()[i-1])
 			
 			t = threading.Thread(target=h.showFrame)

@@ -1,4 +1,4 @@
-import time, random
+import time, random, pickle
 import mysql.connector as db
 import cv2 as cv
 import numpy as np
@@ -77,6 +77,11 @@ def addLog(**data):
 class faceDetect:
 	def __init__(self, algo='haar', pengenalan=False):
 		self.pengenalan = pengenalan
+		if self.pengenalan:
+			with open('dataWajah.pkl', 'rb') as baca:
+				self.name = pickle.load(baca)
+			self.face_recognizer = cv.face.LBPHFaceRecognizer_create()
+			self.face_recognizer.read('trainingData.yml')
 
 		if algo == 'haar':
 			self.model = cv.CascadeClassifier('model/haarcascade_frontalface_default.xml')
@@ -104,7 +109,7 @@ class faceDetect:
 		)
 		for (x,y,w,h) in faces:
 			if self.pengenalan:
-				wajah = self.recogWajah(frame[y:y+h, x:x+w])
+				wajah = self.recogWajah(cv.cvtColor(frame[y:y+h, x:x+w], cv.COLOR_BGR2GRAY))
 				muka += [[x,y,w,h,wajah]]
 			else:
 				muka += [[x,y,w,h]]
@@ -124,7 +129,7 @@ class faceDetect:
 				x, y, kanan, bawah = (detections[0,0,i,3:7] * np.array([w,h,w,h])).astype('int')
 
 				if self.pengenalan:
-					wajah = self.recogWajah(frame[y:kanan, x:bawah])
+					wajah = self.recogWajah(cv.cvtColor(frame[y:y+h, x:x+w], cv.COLOR_BGR2GRAY))
 					muka += [[x, y, kanan-x, bawah-y, wajah]]
 				else:
 					muka += [[x, y, kanan-x, bawah-y]]	
@@ -139,7 +144,7 @@ class faceDetect:
 			x,y,w,h = face['box']
 
 			if self.pengenalan:
-				wajah = self.recogWajah(frame[y:y+h, x:x+w])
+				wajah = self.recogWajah(cv.cvtColor(frame[y:y+h, x:x+w], cv.COLOR_BGR2GRAY))
 				muka += [[x,y,w,h,wajah]]
 			else:
 				muka += [[x,y,w,h]]
@@ -148,8 +153,15 @@ class faceDetect:
 		return muka
 
 	def recogWajah(self, wajah):
-		nama = random.choice(namaFake)
-		return nama
+		#print(wajah.shape())
+		#wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
+		label,confidence=self.face_recognizer.predict(np.asarray(wajah))#predicting the label of given image
+		predicted_name=self.name[label]
+		if confidence > 35 and confidence < 100:
+			print(predicted_name)
+			return predicted_name
+		else:
+			return 'unkown'
 
 
 class Jarak:

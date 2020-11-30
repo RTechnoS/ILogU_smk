@@ -46,7 +46,7 @@ class Mulai:
 		self.__winDaftar.destroy()
 
 		#self.cap = cv.VideoCapture('http://192.168.1.29:4747/video')
-		self.cap = cv.VideoCapture('videoContoh/toby.mp4')
+		self.cap = cv.VideoCapture('../videoContoh/raja.mp4')
 
 		self.jumlahCap = 0
 		nama = (self.nama.get()).replace(' ', '_')
@@ -64,8 +64,8 @@ class Mulai:
 			
 			frame = cv.flip(frame, 1)
 			frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-			frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
-			
+			#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
+			frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
 				
 			faces = detector.face_haar(frame)
 			#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))

@@ -1,9 +1,9 @@
 import tkinter as tk
-from pengambilan_gambar import Mulai as ambilGam
+
 import fungsi, alertWin
 import start_cctv as Scctv
 import view_data as winData
-
+from tkinter import messagebox
 
 print(fungsi.getTime('all'))
 class Utama:
@@ -38,7 +38,7 @@ class Dashboard(Utama):
 		frameBtn = tk.Frame(self.frameAwal)
 		frameBtn.pack(side=tk.BOTTOM, fill=tk.X)
 		rekamBtn = tk.Button(frameBtn, text='Rekam Wajah', state=tk.NORMAL, command=self.addWajah).grid(row=0, column=0, padx=15)
-		cekBtn = tk.Button(frameBtn, text='Cek Muka', state=tk.NORMAL).grid(row=0, column=1, padx=15)
+		cekBtn = tk.Button(frameBtn, text='Latih Wajah', state=tk.NORMAL, command=self.latihWajah).grid(row=0, column=1, padx=15)
 		logBtn = tk.Button(frameBtn, text='Lihat Log', state=tk.NORMAL, command=self.logSiswa).grid(row=0, column=2, padx=15)
 		dataBtn = tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=self.dataSiswa).grid(row=0, column=3, padx=15)
 		alertBtn = tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
@@ -46,7 +46,12 @@ class Dashboard(Utama):
 		testBtn = tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
 		#self.dash.config(menu=self.menubar)
 		self.dash.mainloop()
-	
+	def latihWajah(self):
+		if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
+			import latihWajah
+			latihWajah.mulai()
+			messagebox.showinfo('Succes', "Berhasil Melatih")
+
 	def alertWin(self):
 		alertWin.Main(self.dash)
 	
@@ -57,6 +62,7 @@ class Dashboard(Utama):
 		winData.dataSiswa(self.dash)
 
 	def addWajah(self):
+		from pengambilan_gambar import Mulai as ambilGam
 		openBro = ambilGam(self.dash)
 
 	# def cekAktif(self):

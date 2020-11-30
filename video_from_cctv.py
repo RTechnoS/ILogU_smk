@@ -60,8 +60,8 @@ class Cctv:
 					self.video_writer.write(frame)
 					faces = self.detector.face_haar(frame)
 
-					if len(faces) < 1:
-						faces = self.detector2.face_dnn(frame)
+					# if len(faces) < 1:
+					# 	faces = self.detector2.face_dnn(frame)
 
 					if len(faces) > 1:
 						jarak = fungsi.Jarak(faces)
