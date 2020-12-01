@@ -6,14 +6,12 @@ import pandas as pd
 from datetime import timedelta
 
 namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
-#mysql_conn = None
 
 def dataB():
 	# try:
-	#global mysql_conn
 	mysql_conn = db.connect(
-			host='192.168.100.10',
-			user='root',
+			host='localhost',
+			user='kksi',
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
@@ -38,7 +36,6 @@ def getTime(apa='all'):
 	return data
 
 
-
 def addLog(**data):
 	
 	dBB = dataB()
@@ -59,8 +56,6 @@ def addLog(**data):
 		cc.execute(__sqlAdd, __dataSql)
 		dBB.commit()
 	else:
-		# print(now)
-		# print(now.total_seconds()-isData[3].total_seconds())
 		if (now.total_seconds()-isData[3].total_seconds()) >= 8:
 			
 			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
@@ -96,7 +91,7 @@ class faceDetect:
 
 
 
-	def face_haar(self, frame, scale=1.3, minSize=(2,2)):
+	def face_haar(self, frame, scale=1.3, minSize=(4,4)):
 
 		muka = []
 		gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
@@ -109,14 +104,14 @@ class faceDetect:
 		)
 		for (x,y,w,h) in faces:
 			if self.pengenalan:
-				wajah = self.recogWajah(cv.cvtColor(frame[y:y+h, x:x+w], cv.COLOR_BGR2GRAY))
+				wajah = self.recogWajah(frame[y:y+h, x:x+w])
 				muka += [[x,y,w,h,wajah]]
 			else:
 				muka += [[x,y,w,h]]
 			
 		return(muka)
 
-	def face_dnn(self, frame, conf=0.135): #1.65
+	def face_dnn(self, frame, conf=0.135):
 		muka = []
 		h,w = frame.shape[:2]
 		blob = cv.dnn.blobFromImage(cv.resize(frame, (300, 300)), conf, (300, 300), [104, 117, 123], False, False)
@@ -129,7 +124,7 @@ class faceDetect:
 				x, y, kanan, bawah = (detections[0,0,i,3:7] * np.array([w,h,w,h])).astype('int')
 
 				if self.pengenalan:
-					wajah = self.recogWajah(cv.cvtColor(frame[y:y+h, x:x+w], cv.COLOR_BGR2GRAY))
+					wajah = self.recogWajah(frame[y:bawah, x:kanan])
 					muka += [[x, y, kanan-x, bawah-y, wajah]]
 				else:
 					muka += [[x, y, kanan-x, bawah-y]]	
@@ -144,7 +139,7 @@ class faceDetect:
 			x,y,w,h = face['box']
 
 			if self.pengenalan:
-				wajah = self.recogWajah(cv.cvtColor(frame[y:y+h, x:x+w], cv.COLOR_BGR2GRAY))
+				wajah = self.recogWajah(frame[y:y+h, x:x+w])
 				muka += [[x,y,w,h,wajah]]
 			else:
 				muka += [[x,y,w,h]]
@@ -154,15 +149,18 @@ class faceDetect:
 
 	def recogWajah(self, wajah):
 		#print(wajah.shape())
-		#wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
+		wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
 		label,confidence=self.face_recognizer.predict(np.asarray(wajah))#predicting the label of given image
-		predicted_name=self.name[label]
 		if confidence > 35 and confidence < 100:
+
+			predicted_name=self.name[label]
 			print(predicted_name)
 			return predicted_name
 		else:
 			return 'unkown'
 
+# class Alert:
+# 	pass
 
 class Jarak:
 	def __init__(self, faces):
@@ -172,10 +170,7 @@ class Jarak:
 		#print('cek jarak')
 		#print(self.faces)
 		dataFace = pd.DataFrame(self.faces, columns=("kiri","atas","kanan","bawah","nama"))
-
-		#print(data)
-		#data[2] = data[0]+data[2]
-		#data[3] = data[1]+data[3]	
+	
 		x_jarak = 200
 		y_jarak = 100 
 
@@ -183,9 +178,7 @@ class Jarak:
 
 		for b in dataFace[dataFace['nama'] != data[4]].values:
 			if ((data[2]+x_jarak >= b[0] and data[2] <= b[2]+x_jarak) or (data[0]-x_jarak <= b[2] and data[0] >= b[0]+x_jarak)) and ((data[1] < b[3] and data[1] >= b[1]+y_jarak) or (data[3] <= b[3]+y_jarak and data[3] > b[1])):
-				#print(dataFace[dataFace['nama'] == b[4]].nama.values)
 				near.append(dataFace[dataFace['nama'] == b[4]].nama.values[0])
-			#print(data[4])
 		if len(near) != 0:
 			print(data[4], "Bersama dengan " , (',').join(near))
 			return (',').join(near)

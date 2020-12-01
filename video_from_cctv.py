@@ -8,13 +8,10 @@ import time, random, threading
 class Cctv:
 	AllFrame = {}
 	def __init__(self, dataCam):
-		#print(dataCam)
-		#self.dataCam = dataCam
 		self.idCam, self.namaCCTV, self.name, self.url = dataCam
-		#print(self.url)
-		
-
+	
 	def Mulai(self):
+		minJumlah = 1
 		# if not os.path.isdir(f'dataset/{self.name}'):
 		# 	os.mkdir(f'dataset/{self.name}')
 		try:
@@ -34,11 +31,10 @@ class Cctv:
 			#self.jumlahCap = 0
 			print(self.namaCCTV, 'Kamera Mulai')
 
-			self.detector = fungsi.faceDetect('haar', pengenalan=True) 
-			self.detector2 = fungsi.faceDetect('dnn', pengenalan=True) # BAKUP
+			detector = fungsi.faceDetect('haar', pengenalan=True) 
+			detector2 = fungsi.faceDetect('dnn', pengenalan=True) # BAKUP
  
 			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened():
-				#time.sleep(0.05)
 				_, Cctv.AllFrame[self.idCam][0] = self.cam.read()
 				# if _ == False:
 				# 	continue
@@ -54,16 +50,16 @@ class Cctv:
 					#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
 					#Cctv.AllFrame[self.idCam][0] = frame
 					#print(frame)
-					#self.gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
 					#cv.imwrite(nl, frame)
-					self.video_writer.write(frame)
-					faces = self.detector.face_haar(frame)
+					self.video_writer.write(Cctv.AllFrame[self.idCam][0])
 
-					# if len(faces) < 1:
-					# 	faces = self.detector2.face_dnn(frame)
+					faces = detector.face_haar(frame)
 
-					if len(faces) > 1:
+					if len(faces) < minJumlah: # jika jumlah yg di diteksi haar kurang dari (minJumlah)
+						faces = detector2.face_dnn(frame)
+
+					if len(faces) > 1: # jika lebih 2 orang ter detect maka cek jarak
 						jarak = fungsi.Jarak(faces)
 
 					#fces = []
@@ -104,7 +100,6 @@ class Cctv:
 
 			self.video_writer.release()
 			self.cam.release()
-			
 			cv.destroyAllWindows()
 
 	def stopCctv(self):

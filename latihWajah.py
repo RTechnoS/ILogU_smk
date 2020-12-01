@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 import pickle
+
 def labels_for_training_data(directory):
     faces=[]
     faceID=[]
@@ -10,25 +11,26 @@ def labels_for_training_data(directory):
     for num,(path,subdirnames,filenames) in enumerate(os.walk(directory)):
         
         for filename in filenames:
-            
             if filename.startswith("."):
-                print("Skipping system file")#Skipping files that startwith .
+                print("File system")#Skipping files that startwith .
                 continue
 
-            id=num#fetching subdirectory names
             img_path=os.path.join(path,filename)#fetching image path
             #print("img_path:",img_path)
-            #print("id:",id)
+            #print("id:",num)
             test_img=cv2.imread(img_path)#loading each image one by one
             if test_img is None:
-                print("Image not loaded properly")
+                print("Gambar tidak bisa di baca")
                 continue
-            roi_gray = cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
-            faces.append(roi_gray)
-            faceID.append(int(id))
+
+            gry = cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
+            faces.append(gry)
+            faceID.append(num)
+
         if len(path.split("\\")) == 2:
             nama  = (path.split("\\")[-1]).replace('_', ' ')
             faceLbl[num] = nama
+
     with open('dataWajah.pkl', 'wb') as tulis:
         pickle.dump(faceLbl, tulis)
 

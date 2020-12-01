@@ -1,6 +1,5 @@
 import tkinter as tk
-
-import fungsi, alertWin
+import fungsi
 import start_cctv as Scctv
 import view_data as winData
 from tkinter import messagebox
@@ -37,13 +36,13 @@ class Dashboard(Utama):
 
 		frameBtn = tk.Frame(self.frameAwal)
 		frameBtn.pack(side=tk.BOTTOM, fill=tk.X)
-		rekamBtn = tk.Button(frameBtn, text='Rekam Wajah', state=tk.NORMAL, command=self.addWajah).grid(row=0, column=0, padx=15)
-		cekBtn = tk.Button(frameBtn, text='Latih Wajah', state=tk.NORMAL, command=self.latihWajah).grid(row=0, column=1, padx=15)
-		logBtn = tk.Button(frameBtn, text='Lihat Log', state=tk.NORMAL, command=self.logSiswa).grid(row=0, column=2, padx=15)
-		dataBtn = tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=self.dataSiswa).grid(row=0, column=3, padx=15)
-		alertBtn = tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
-		cctvMngrBtn = tk.Button(frameBtn, text='CCTV', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Scctv.Manager).grid(row=0, column=5, padx=15)
-		testBtn = tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
+		tk.Button(frameBtn, text='Rekam Wajah', state=tk.NORMAL, command=self.addWajah).grid(row=0, column=0, padx=15)
+		tk.Button(frameBtn, text='Latih Wajah', state=tk.NORMAL, command=self.latihWajah).grid(row=0, column=1, padx=15)
+		tk.Button(frameBtn, text='Lihat Log', state=tk.NORMAL, command=self.logSiswa).grid(row=0, column=2, padx=15)
+		tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=self.dataSiswa).grid(row=0, column=3, padx=15)
+		tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
+		tk.Button(frameBtn, text='CCTV', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Scctv.Manager).grid(row=0, column=5, padx=15)
+		tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
 		#self.dash.config(menu=self.menubar)
 		self.dash.mainloop()
 	def latihWajah(self):
@@ -53,6 +52,7 @@ class Dashboard(Utama):
 			messagebox.showinfo('Succes', "Berhasil Melatih")
 
 	def alertWin(self):
+		import alertWin
 		alertWin.Main(self.dash)
 	
 	def logSiswa(self):
@@ -64,9 +64,6 @@ class Dashboard(Utama):
 	def addWajah(self):
 		from pengambilan_gambar import Mulai as ambilGam
 		openBro = ambilGam(self.dash)
-
-	# def cekAktif(self):
-	# 	hasil = fungsi.checkCctv()
 
 	def testCmd(self):
 		#exit()

@@ -10,6 +10,7 @@ class Main:
 	logKorban = []
 	logTeman = []
 	logTerdekat = {}
+
 	def __init__(self, dash):
 		self.dash = dash
 		self.c = fungsi.c
@@ -52,7 +53,7 @@ class Main:
 		self.periksaTeman()
 	
 	def periksaTeman(self):
-		col = ['id', 'Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Coor']
+		col = ('id', 'Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Coor')
 		logTerdekat = []
 		for log in Main.logKorban:
 			idLog ,nama, tanggal, waktu, lokasi, terdekat, coor = log
