@@ -1,25 +1,25 @@
-import time, random
-from pickle import load
-import mysql.connector as db
+from time import strftime
+import random
+from mysql.connector import connect
 import cv2 as cv
 import numpy as np
-import pandas as pd
+from pandas import DataFrame
 from datetime import timedelta
 
 namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
 
 def dataB():
 	# try:
-	mysql_conn = db.connect(
-			host='192.168.100.5',
-			user='root',
+	_conn = connect(
+			host='localhost',
+			user='kksi',
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)
 	# if mysql_conn.is_connected():
 	# 	return mysql_conn
-	return mysql_conn
+	return _conn
 	# except:
 	# 	print('Ada Masalah pada database')
 
@@ -28,11 +28,11 @@ c = dB.cursor(buffered=True)
 
 def getTime(apa='all'):
 	if apa == 'jam':
-		data = time.strftime("%H:%M:%S")
+		data = strftime("%H:%M:%S")
 	elif apa == 'hari':
-		data = time.strftime("%Y-%m-%d")
+		data = strftime("%Y-%m-%d")
 	else:
-		data = time.strftime("%H:%M:%S %d-%m-%Y")
+		data = strftime("%H:%M:%S %d-%m-%Y")
 
 	return data
 
@@ -58,7 +58,6 @@ def addLog(**data):
 		dBB.commit()
 	else:
 		if (now.total_seconds()-isData[3].total_seconds()) >= 8:
-			
 			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
 			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
 			cc.execute(__sqlAdd, __dataSql)
@@ -72,6 +71,7 @@ def addLog(**data):
 
 class faceDetect:
 	def __init__(self, algo='haar', pengenalan=False):
+		from pickle import load
 		self.pengenalan = pengenalan
 		if self.pengenalan:
 			with open('dataWajah.pkl', 'rb') as baca:
@@ -93,12 +93,11 @@ class faceDetect:
 
 
 	def face_haar(self, frame, scale=1.3, minSize=(4,4)):
-
 		muka = []
-		gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+		# gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
 		faces = self.model.detectMultiScale(
-		    gray,
+		    cv.cvtColor(frame, cv.COLOR_BGR2GRAY),
 			scaleFactor = scale,
 			minNeighbors=5,
 			minSize=minSize
@@ -120,8 +119,8 @@ class faceDetect:
 		detections = self.model.forward()
 
 		for i in range(detections.shape[2]):
-			confidence = detections[0,0,i,2]
-			if (confidence > conf):
+			#confidence = detections[0,0,i,2]
+			if (detections[0,0,i,2] > conf):
 				x, y, kanan, bawah = (detections[0,0,i,3:7] * np.array([w,h,w,h])).astype('int')
 
 				if self.pengenalan:
@@ -129,7 +128,6 @@ class faceDetect:
 					muka += [[x, y, kanan-x, bawah-y, wajah]]
 				else:
 					muka += [[x, y, kanan-x, bawah-y]]	
-
 		return muka
 
 	def face_mtcnn(self, frame):
@@ -174,7 +172,7 @@ class Jarak:
 	def jarakwajah(self, data):
 		#print('cek jarak')
 		#print(self.faces)
-		dataFace = pd.DataFrame(self.faces, columns=("kiri","atas","kanan","bawah","nama"))
+		dataFace = DataFrame(self.faces, columns=("kiri","atas","kanan","bawah","nama"))
 	
 		x_jarak = 200
 		y_jarak = 100 

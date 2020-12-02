@@ -1,6 +1,6 @@
-import threading
+from threading import Thread
 import video_from_cctv as cctv
-import fungsi
+from fungsi import c
 import tkinter as tk
 #cctv.Cctv(1).Mulai()
 class Manager:
@@ -18,7 +18,6 @@ class Manager:
 	
 	def cekDb():
 		#print('sini')
-		c = fungsi.c
 		c.execute("SELECT * from camera")
 		isData = c.fetchall()
 		return isData
@@ -29,7 +28,7 @@ class Manager:
 			if idCam not in cctv.Cctv.AllFrame or cctv.Cctv.AllFrame[idCam][1] != True:
 				print(i)
 				h = cctv.Cctv(i)
-				t = threading.Thread(target=h.Mulai)
+				t = Thread(target=h.Mulai)
 				t.start()
 			else:
 				print('Camera', idCam, 'sudah aktif')
@@ -47,7 +46,7 @@ class Manager:
 
 			h = cctv.Cctv(Manager.cekDb()[i-1])
 			
-			t = threading.Thread(target=h.showFrame)
+			t = Thread(target=h.showFrame)
 			t.start()
 
 if __name__ == "__main__":

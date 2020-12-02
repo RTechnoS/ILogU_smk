@@ -1,9 +1,6 @@
 import tkinter as tk
-import fungsi
+from fungsi import c
 from tkinter import ttk
-
-__mydb = fungsi.dB
-c = fungsi.c
 
 class Mulai:
 	def __init__(self, win):

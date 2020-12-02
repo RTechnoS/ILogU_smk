@@ -1,7 +1,6 @@
 import tkinter as tk
 import fungsi
 import start_cctv as Scctv
-import view_data as winData
 from tkinter import messagebox
 
 print(fungsi.getTime('all'))
@@ -38,8 +37,8 @@ class Dashboard(Utama):
 		frameBtn.pack(side=tk.BOTTOM, fill=tk.X)
 		tk.Button(frameBtn, text='Rekam Wajah', state=tk.NORMAL, command=self.addWajah).grid(row=0, column=0, padx=15)
 		tk.Button(frameBtn, text='Latih Wajah', state=tk.NORMAL, command=self.latihWajah).grid(row=0, column=1, padx=15)
-		tk.Button(frameBtn, text='Lihat Log', state=tk.NORMAL, command=self.logSiswa).grid(row=0, column=2, padx=15)
-		tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=self.dataSiswa).grid(row=0, column=3, padx=15)
+		tk.Button(frameBtn, text='Lihat Log', state=tk.NORMAL, command= lambda: self.logData(0)).grid(row=0, column=2, padx=15)
+		tk.Button(frameBtn, text='Data Siswa', state=tk.NORMAL, command=lambda: self.logData(1)).grid(row=0, column=3, padx=15)
 		tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
 		tk.Button(frameBtn, text='CCTV', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Scctv.Manager).grid(row=0, column=5, padx=15)
 		tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
@@ -55,11 +54,12 @@ class Dashboard(Utama):
 		import alertWin
 		alertWin.Main(self.dash)
 	
-	def logSiswa(self):
-		winData.logSiswa(self.dash)
-
-	def dataSiswa(self):
-		winData.dataSiswa(self.dash)
+	def logData(self, apo):
+		import view_data as winData
+		if apo == 0:
+			winData.logSiswa(self.dash)
+		else:
+			winData.dataSiswa(self.dash)
 
 	def addWajah(self):
 		from pengambilan_gambar import Mulai as ambilGam

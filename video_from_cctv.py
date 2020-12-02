@@ -1,8 +1,6 @@
 import cv2 as cv
 import fungsi
 # import os
-import time, random, threading	
-
 
 class Cctv:
 	AllFrame = {}
@@ -43,7 +41,7 @@ class Cctv:
 					frame = Cctv.AllFrame[self.idCam][0]
 					waktu = fungsi.getTime()
 					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-					frame = cv.resize(Cctv.AllFrame[self.idCam][0], (640,480))
+					#frame = cv.resize(Cctv.AllFrame[self.idCam][0], (640,480))
 
 
 					#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
@@ -51,7 +49,7 @@ class Cctv:
 					#print(frame)
 					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
 					#cv.imwrite(nl, frame)
-					self.video_writer.write(Cctv.AllFrame[self.idCam][0])
+					self.video_writer.write(frame)
 
 					#faces = detector2.face_dnn(frame, conf=0.25)
 					faces = detector.face_haar(frame, minSize=(2,2))
@@ -66,7 +64,6 @@ class Cctv:
 					for (x, y, w, h, wajah) in faces:
 						kanan, bawah = (x+w, y+h)
 
-						cv.rectangle(Cctv.AllFrame[self.idCam][0], (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
 						#imWajah = frame[y:(y+w), x:(x+w)]
 						#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
 							
@@ -80,7 +77,7 @@ class Cctv:
 
 						fungsi.addLog(nama=wajah, tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str([x,y,kanan,bawah]))
 
-
+						cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=1.5)
 						# if len(faces) > 1:
 						# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 						#t.start()

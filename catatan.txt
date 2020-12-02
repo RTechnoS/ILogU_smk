@@ -7,6 +7,8 @@ membersihkian komen, mengubah minSize di face_haar dari 2,2 menjadi 4,4 , memper
 
 
 
+from pandas import DataFrame (fungsi.py, alertWin.py), menggabungkan fungsi logData(main.py) dengan if, mempersingkat beberapa module pada fungsi.py, masih ragu from fungsi import c (start_cctv.py), membuat proses video menggunakan variable frame bukan menggunakan Main.AllFrame lagi, 
+
 
 
 

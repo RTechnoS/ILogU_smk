@@ -1,8 +1,7 @@
-import tkinter as tk
 import fungsi, time
-import pandas as pd
+import tkinter as tk
+from pandas import DataFrame
 import matplotlib.pyplot as plt
-
 dB = fungsi.dB
 c = fungsi.c
 
@@ -10,10 +9,10 @@ class Main:
 	logKorban = []
 	logTeman = []
 	logTerdekat = {}
+	print('import')
 
 	def __init__(self, dash):
 		self.dash = dash
-		self.c = fungsi.c
 		self.namaKorban = tk.StringVar()
 		self.namaKorban.set('udin')
 		
@@ -74,10 +73,10 @@ class Main:
 		
 				#Main.logTerdekat.append()
 		#print(Main.logTerdekat)
-		#logTerdekat = pd.DataFrame(Main.logTerdekat.value_counts(), columns)
+		#logTerdekat = DataFrame(Main.logTerdekat.value_counts(), columns)
 				
 		
-		dataLog = pd.DataFrame(Main.logTeman, columns=col)
+		dataLog = DataFrame(Main.logTeman, columns=col)
 		logNear = list(set(logTerdekat))
 		for nameLog in logNear:
 			Main.logTerdekat[nameLog] = logTerdekat.count(nameLog)
