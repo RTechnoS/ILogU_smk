@@ -1,7 +1,6 @@
 import cv2 as cv
 import fungsi
 # import os
-import fungsi_camera 
 import time, random, threading	
 
 
@@ -54,10 +53,11 @@ class Cctv:
 					#cv.imwrite(nl, frame)
 					self.video_writer.write(Cctv.AllFrame[self.idCam][0])
 
-					faces = detector.face_haar(frame)
+					#faces = detector2.face_dnn(frame, conf=0.25)
+					faces = detector.face_haar(frame, minSize=(2,2))
 
-					if len(faces) < minJumlah: # jika jumlah yg di diteksi haar kurang dari (minJumlah)
-						faces = detector2.face_dnn(frame)
+					# if len(faces) < minJumlah: # jika jumlah yg di diteksi detect1 kurang dari (minJumlah)
+					# 	faces = detector.face_haar(frame)
 
 					if len(faces) > 1: # jika lebih 2 orang ter detect maka cek jarak
 						jarak = fungsi.Jarak(faces)

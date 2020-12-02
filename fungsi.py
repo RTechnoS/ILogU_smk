@@ -1,4 +1,5 @@
-import time, random, pickle
+import time, random
+from pickle import load
 import mysql.connector as db
 import cv2 as cv
 import numpy as np
@@ -10,8 +11,8 @@ namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri
 def dataB():
 	# try:
 	mysql_conn = db.connect(
-			host='localhost',
-			user='kksi',
+			host='192.168.100.5',
+			user='root',
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
@@ -74,7 +75,7 @@ class faceDetect:
 		self.pengenalan = pengenalan
 		if self.pengenalan:
 			with open('dataWajah.pkl', 'rb') as baca:
-				self.name = pickle.load(baca)
+				self.name = load(baca)
 			self.face_recognizer = cv.face.LBPHFaceRecognizer_create()
 			self.face_recognizer.read('trainingData.yml')
 
@@ -149,13 +150,17 @@ class faceDetect:
 
 	def recogWajah(self, wajah):
 		#print(wajah.shape())
-		wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
-		label,confidence=self.face_recognizer.predict(np.asarray(wajah))#predicting the label of given image
-		if confidence > 35 and confidence < 100:
+		if 0 not in wajah.shape:
+			print(wajah.shape)
+			wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
+			label,confidence=self.face_recognizer.predict(wajah)#predicting the label of given image
+			if confidence > 50 and confidence < 200:
 
-			predicted_name=self.name[label]
-			print(predicted_name)
-			return predicted_name
+				predicted_name=self.name[label]
+				print(predicted_name, confidence, '%')
+				return predicted_name
+			else:
+				return 'unkown'
 		else:
 			return 'unkown'
 

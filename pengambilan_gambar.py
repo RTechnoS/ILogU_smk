@@ -45,9 +45,9 @@ class Mulai:
 	def startCap(self):
 		self.__winDaftar.destroy()
 
-		#self.cap = cv.VideoCapture('http://192.168.1.29:4747/video')
-		#self.cap = cv.VideoCapture('../videoContoh/raja.mp4')
-		self.cap = cv.VideoCapture(0)
+		#self.cap = cv.VideoCapture('http://192.168.100.209:4747/video')
+		self.cap = cv.VideoCapture('../videoContoh/raja.mp4')
+		#self.cap = cv.VideoCapture(0)
 
 		self.jumlahCap = 0
 		nama = (self.nama.get()).replace(' ', '_')
@@ -61,18 +61,19 @@ class Mulai:
 			_, frame = self.cap.read()
 
 			if _ == False:
+				print('Video selesai')
 				break
 			
 			frame = cv.flip(frame, 1)
-			#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
+			frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
 			#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
-			#frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
+			frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
 				
 			faces = detector.face_dnn(frame, conf=0.45)
 			#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
 
 			for (x, y, w, h) in faces:
-				imWajah = frame[y:(y+w), x:(x+w)]
+				imWajah = frame[y:(y+h), x:(x+w)]
 				nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
 				cv.imwrite(nl, imWajah)
 				cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
@@ -81,7 +82,7 @@ class Mulai:
 
 			cv.imshow('Perekaman', frame)
 
-			if self.jumlahCap <= 100:
+			if self.jumlahCap <= 160:
 				if cv.waitKey(20) & 0xFF == ord('q'):
 					self.closing_win()
 
