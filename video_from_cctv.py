@@ -33,11 +33,12 @@ class Cctv:
  
 			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened():
 				_, Cctv.AllFrame[self.idCam][0] = self.cam.read()
-				# if _ == False:
-				# 	continue
+					# if _ == False:
+					# 	continue
 
-				#try:
-				if 1+1 == 2:
+					#try:
+					#if 1+1 == 2:
+				if int(self.cam.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
 					frame = Cctv.AllFrame[self.idCam][0]
 					waktu = fungsi.getTime()
 					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
@@ -74,10 +75,10 @@ class Cctv:
 						nearby = ""
 						if len(faces) > 1:
 							nearby = jarak.jarakwajah([x, y, kanan, bawah, wajah])
-
+						cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
 						fungsi.addLog(nama=wajah, tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str([x,y,kanan,bawah]))
 
-						cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
+						
 						# if len(faces) > 1:
 						# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 						#t.start()
@@ -112,9 +113,7 @@ class Cctv:
 				print('error')
 				Cctv.AllFrame[self.idCam][1] = False
 				break
-
 			frame = cv.resize(Cctv.AllFrame[self.idCam][0], (640,480))
-
 			cv.imshow(self.namaCCTV, frame)
 
 			if cv.waitKey(20) & 0xFF == 27:

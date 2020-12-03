@@ -63,24 +63,25 @@ class Mulai:
 			if _ == False:
 				print('Video selesai')
 				break
-			
-			frame = cv.flip(frame, 1)
-			frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
-			#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
-			frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
-				
-			faces = detector.face_dnn(frame, conf=0.45)
-			#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
+			if int(self.cap.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
+				print('frame')
+				frame = cv.flip(frame, 1)
+				frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
+				#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
+				frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
+					
+				faces = detector.face_dnn(frame, conf=0.45)
+				#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
 
-			for (x, y, w, h) in faces:
-				imWajah = frame[y:(y+h), x:(x+w)]
-				nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
-				cv.imwrite(nl, imWajah)
-				cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
-				cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
-				self.jumlahCap += 1
+				for (x, y, w, h) in faces:
+					imWajah = frame[y:(y+h), x:(x+w)]
+					nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
+					cv.imwrite(nl, imWajah)
+					cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
+					cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
+					self.jumlahCap += 1
 
-			cv.imshow('Perekaman', frame)
+				cv.imshow('Perekaman', frame)
 
 			if self.jumlahCap <= 160:
 				if cv.waitKey(20) & 0xFF == ord('q'):

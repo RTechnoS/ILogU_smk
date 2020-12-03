@@ -178,9 +178,6 @@ class faceDetect:
 				return 'unkown'
 
 
-# class Alert:
-# 	pass
-
 class Jarak:
 	def __init__(self, faces):
 		self.faces = faces
