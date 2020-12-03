@@ -28,8 +28,8 @@ class Cctv:
 			#self.jumlahCap = 0
 			print(self.namaCCTV, 'Kamera Mulai')
 
-			detector = fungsi.faceDetect('haar', pengenalan=True) 
-			detector2 = fungsi.faceDetect('dnn', pengenalan=True) # BAKUP
+			detector = fungsi.faceDetect('haar', pengenalan='cnn') 
+			detector2 = fungsi.faceDetect('dnn', pengenalan='cnn') # BAKUP
  
 			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened():
 				_, Cctv.AllFrame[self.idCam][0] = self.cam.read()
@@ -51,8 +51,8 @@ class Cctv:
 					#cv.imwrite(nl, frame)
 					self.video_writer.write(frame)
 
-					#faces = detector2.face_dnn(frame, conf=0.25)
-					faces = detector.face_haar(frame, minSize=(2,2))
+					faces = detector2.face_dnn(frame, conf=0.25)
+					#faces = detector.face_haar(frame, minSize=(2,2))
 
 					# if len(faces) < minJumlah: # jika jumlah yg di diteksi detect1 kurang dari (minJumlah)
 					# 	faces = detector.face_haar(frame)
@@ -77,7 +77,7 @@ class Cctv:
 
 						fungsi.addLog(nama=wajah, tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat=nearby, coor=str([x,y,kanan,bawah]))
 
-						cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=1.5)
+						cv.rectangle(frame, (x,y), (kanan, bawah), color=(57,196,35), thickness=2)
 						# if len(faces) > 1:
 						# 	jarak.jarakwajah([x,y,kanan,bawah, random.choice(namaFake)])
 						#t.start()

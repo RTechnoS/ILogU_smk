@@ -11,8 +11,8 @@ namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri
 def dataB():
 	# try:
 	_conn = connect(
-			host='localhost',
-			user='kksi',
+			host='192.168.100.5',
+			user='root',
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
@@ -68,16 +68,22 @@ def addLog(**data):
 			#print('==========')
 			
 
-
 class faceDetect:
 	def __init__(self, algo='haar', pengenalan=False):
 		from pickle import load
+		
 		self.pengenalan = pengenalan
-		if self.pengenalan:
-			with open('dataWajah.pkl', 'rb') as baca:
+		if self.pengenalan == 'lbph':
+			with open('trainWajah/wajahLbph.pkl', 'rb') as baca:
 				self.name = load(baca)
 			self.face_recognizer = cv.face.LBPHFaceRecognizer_create()
-			self.face_recognizer.read('trainingData.yml')
+			self.face_recognizer.read('trainWajah/trainingLbph.yml')
+
+		elif self.pengenalan == 'cnn':
+			from keras.models import load_model
+			self.mdlFace = load_model('trainWajah/trainingCnn.h5')
+			with open('trainWajah/wajahCnn.pkl', 'rb') as baca:
+				self.name = load(baca)
 
 		if algo == 'haar':
 			self.model = cv.CascadeClassifier('model/haarcascade_frontalface_default.xml')
@@ -147,20 +153,30 @@ class faceDetect:
 		return muka
 
 	def recogWajah(self, wajah):
-		#print(wajah.shape())
 		if 0 not in wajah.shape:
-			print(wajah.shape)
-			wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
-			label,confidence=self.face_recognizer.predict(wajah)#predicting the label of given image
-			if confidence > 50 and confidence < 200:
+			if self.pengenalan == 'lbph':
+					print(wajah.shape)
+					wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
+					label,confidence=self.face_recognizer.predict(wajah)#predicting the label of given image
+					if confidence > 50 and confidence < 200:
 
-				predicted_name=self.name[label]
-				print(predicted_name, confidence, '%')
-				return predicted_name
-			else:
-				return 'unkown'
+						predicted_name=self.name[label]
+						print(predicted_name, confidence, '%')
+						return predicted_name
+					else:
+						return 'unkown'
+				
+
+			elif self.pengenalan == 'cnn':
+				im = cv.resize(wajah, (67,67))
+				im = im[...,::-1]
+				im = np.expand_dims(im,axis=0)
+				result=self.mdlFace.predict(im,verbose=0)
+				print(self.name[np.argmax(result)])
+				return self.name[np.argmax(result)]
 		else:
-			return 'unkown'
+				return 'unkown'
+
 
 # class Alert:
 # 	pass
@@ -176,6 +192,7 @@ class Jarak:
 	
 		x_jarak = 200
 		y_jarak = 100 
+		print(len(self.faces))
 
 		near = []
 

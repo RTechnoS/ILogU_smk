@@ -44,10 +44,11 @@ class Dashboard(Utama):
 		tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
 		#self.dash.config(menu=self.menubar)
 		self.dash.mainloop()
+		
 	def latihWajah(self):
 		if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
 			import latihWajah
-			latihWajah.mulai()
+			latihWajah.Cnntrain()
 			messagebox.showinfo('Succes', "Berhasil Melatih")
 
 	def alertWin(self):
