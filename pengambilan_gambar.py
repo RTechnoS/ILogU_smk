@@ -64,7 +64,6 @@ class Mulai:
 				print('Video selesai')
 				break
 			if int(self.cap.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
-				print('frame')
 				frame = cv.flip(frame, 1)
 				frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
 				#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
