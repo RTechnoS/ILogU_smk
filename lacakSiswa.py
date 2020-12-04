@@ -8,7 +8,7 @@ c = fungsi.c
 
 class lacak:
 	def __init__(self, nama):
-		self.namaKorban = 'karim'
+		self.namaKorban = nama
 		self.logKorban = []
 		self.logTerdekat = []
 		self.col = ['id', 'Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Coor']
@@ -22,7 +22,7 @@ class lacak:
 
 		for log in self.logKorban:
 		    idLog ,nama, tanggal, waktu, lokasi, terdekat, coor = log
-		    __sql = "SELECT * from logSiswa where nama!='{}' and tanggal='{}' and lokasi='{}' and waktu like '%{}%' ORDER BY waktu ASC".format(namaKorban ,tanggal,lokasi,':'.join(str(waktu).split(':')[0:-1]))
+		    __sql = "SELECT * from logSiswa where nama!='{}' and tanggal='{}' and lokasi='{}' and waktu like '%{}%' ORDER BY waktu ASC".format(self.namaKorban ,tanggal,lokasi,':'.join(str(waktu).split(':')[0:-1]))
 		    c.execute(__sql)
 
 		    if log[5] != '' and log[5] != None:
@@ -36,8 +36,8 @@ class lacak:
 
 	def prosesData(self):
 		self.dataF = pd.DataFrame(columns=('nama', 'oneLoc', 'near', 'hari'))
-		self.logKorban = pd.DataFrame(self.logTeman, columns=col) # log si korban covid
-		self.logTeman = pd.DataFrame(self.logTeman, columns=col) # log teman yang pernah satu lokasi dengan korban
+		self.logKorban = pd.DataFrame(self.logTeman, columns=self.col) # log si korban covid
+		self.logTeman = pd.DataFrame(self.logTeman, columns=self.col) # log teman yang pernah satu lokasi dengan korban
 		self.logKorban.drop('id',axis=1, inplace=True) 
 		self.logTeman.drop('id',axis=1, inplace=True)
 
@@ -53,31 +53,44 @@ class lacak:
 				#print(tgl, lk)
 				jam = self.logKorban[self.logKorban.Lokasi == lk].sort_values(by='Waktu').Waktu
 				for p in self.logTeman[self.logTeman.Tanggal == tgl].sort_values(by='Waktu')['Nama'].unique():
-		            d.append(p)
+					d.append(p)
 
 		self.dataF = self.dataF.set_index('nama')
 		for na in self.dataF.index:
 		    self.dataF.at[na, 'oneLoc'] = d.count(na)
 		print(self.dataF)
 
+
+
+
 	def showPlt(self):
+		def autolabel(rects):
+			"""Attach a text label above each bar in *rects*, displaying its height."""
+			for rect in rects:
+				height = rect.get_height()
+				ax.annotate('{}'.format(height),
+					xy=(rect.get_x() + rect.get_width() / 2, height),
+					xytext=(0, 3),  # 3 points vertical offset
+					textcoords="offset points",
+					ha='center', va='bottom')
 		plt.figure(figsize=(20,10))
 		n = self.dataF.index
 		locA= self.dataF['oneLoc']
 		neaR = self.dataF['near']
+		bar_width = 0.35
 		fig, ax = plt.subplots()
 		index = np.arange(len(n))
 		pl1 = ax.bar(index, locA, bar_width, color='r',
 		                label='Jumlah Satu Lokasi')
 
-		pl2 = ax.bar(index+0.35, neaR, bar_width, color='b',
+		pl2 = ax.bar(index+bar_width, neaR, bar_width, color='b',
 		                label='Jumlah Berdekatan')
 
 		ax.set_xlabel('Nama')
 		ax.set_ylabel('Berapa Kali')
 		ax.set_title('Static interkasi dengan korban')
 		ax.set_xticks(index + bar_width / 2)
-		ax.set_xticklabels(dataF.index)
+		ax.set_xticklabels(self.dataF.index)
 		ax.legend()
 		autolabel(pl1)
 		autolabel(pl2)
