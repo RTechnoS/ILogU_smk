@@ -44,13 +44,7 @@ class Cctv:
 					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
 					#frame = cv.resize(Cctv.AllFrame[self.idCam][0], (640,480))
 
-
 					#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
-					#Cctv.AllFrame[self.idCam][0] = frame
-					#print(frame)
-					#nl =  f'dataset/{self.name}/{self.jumlahCap}_{self.name}.jpg'
-					#cv.imwrite(nl, frame)
-					self.video_writer.write(frame)
 
 					faces = detector2.face_dnn(frame, conf=0.25)
 					#faces = detector.face_haar(frame, minSize=(2,2))
@@ -64,14 +58,6 @@ class Cctv:
 					#fces = []
 					for (x, y, w, h, wajah) in faces:
 						kanan, bawah = (x+w, y+h)
-
-						#imWajah = frame[y:(y+w), x:(x+w)]
-						#t = threading.Thread(target=fungsi.addLog(nama='Rusman', tanggal=hari, waktu=fungsi.getTime('jam'), lokasi=self.name, terdekat='', interaksi='makan'))
-							
-						#face_frame = frame[y:bawah, x:kanan]
-						#wajah = fungsi_camera.faceRecog.recog(face_frame)
-						#fces.append([x, y, kanan, bawah, wajah])
-
 						nearby = ""
 						if len(faces) > 1:
 							nearby = jarak.jarakwajah([x, y, kanan, bawah, wajah])
@@ -92,6 +78,7 @@ class Cctv:
 
 				# except Exception as e:
 				# 	print(e)
+				self.video_writer.write(Cctv.AllFrame[self.idCam][0])
 
 			print(self.name, ' Terhenti')
 			Cctv.AllFrame[self.idCam] = [[], False]
