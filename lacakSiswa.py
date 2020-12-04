@@ -1,5 +1,5 @@
 import fungsi
-import matplotlib.pyplot as plt
+
 import pandas as pd
 import numpy as np
 
@@ -35,14 +35,14 @@ class lacak:
 		self.prosesData()
 
 	def prosesData(self):
-		self.dataF = pd.DataFrame(columns=('nama', 'oneLoc', 'near', 'hari'))
+		self.dataF = pd.DataFrame(columns=('nama', 'oneLoc', 'near', 'hari', 'jumlahHari'))
 		self.logKorban = pd.DataFrame(self.logTeman, columns=self.col) # log si korban covid
 		self.logTeman = pd.DataFrame(self.logTeman, columns=self.col) # log teman yang pernah satu lokasi dengan korban
 		self.logKorban.drop('id',axis=1, inplace=True) 
 		self.logTeman.drop('id',axis=1, inplace=True)
 
 		for g in set(self.logKorban.Nama.unique()):
-			self.dataF = self.dataF.append({'nama':g, 'near':self.logTerdekat.count(g),  'hari':list(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique())} , ignore_index=True)
+			self.dataF = self.dataF.append({'nama':g, 'near':self.logTerdekat.count(g), 'hari':list(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique()), 'jumlahHari':len(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique())} , ignore_index=True)
 		print(self.logKorban)
 		tanggalKorban = self.logKorban.sort_values(by='Tanggal').Tanggal.unique() # semua tanggal saat korban terlacak
 		
@@ -58,41 +58,8 @@ class lacak:
 		self.dataF = self.dataF.set_index('nama')
 		for na in self.dataF.index:
 		    self.dataF.at[na, 'oneLoc'] = d.count(na)
-		print(self.dataF)
+		#print(self.dataF)
+		self.dataF.to_csv(f'find/{self.namaKorban}.csv', index = True)
 
 
 
-
-	def showPlt(self):
-		def autolabel(rects):
-			"""Attach a text label above each bar in *rects*, displaying its height."""
-			for rect in rects:
-				height = rect.get_height()
-				ax.annotate('{}'.format(height),
-					xy=(rect.get_x() + rect.get_width() / 2, height),
-					xytext=(0, 3),  # 3 points vertical offset
-					textcoords="offset points",
-					ha='center', va='bottom')
-		plt.figure(figsize=(20,10))
-		n = self.dataF.index
-		locA= self.dataF['oneLoc']
-		neaR = self.dataF['near']
-		bar_width = 0.35
-		fig, ax = plt.subplots()
-		index = np.arange(len(n))
-		pl1 = ax.bar(index, locA, bar_width, color='r',
-		                label='Jumlah Satu Lokasi')
-
-		pl2 = ax.bar(index+bar_width, neaR, bar_width, color='b',
-		                label='Jumlah Berdekatan')
-
-		ax.set_xlabel('Nama')
-		ax.set_ylabel('Berapa Kali')
-		ax.set_title('Static interkasi dengan korban')
-		ax.set_xticks(index + bar_width / 2)
-		ax.set_xticklabels(self.dataF.index)
-		ax.legend()
-		autolabel(pl1)
-		autolabel(pl2)
-		# plt.savefig("tes.png")
-		plt.show()

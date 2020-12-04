@@ -72,10 +72,8 @@ class Cnntrain:
          
         filepath = self.path+'trainWajah/trainingCnn.h5'
         Cnntrain.save_model(classifier, filepath, save_format='h5')
-        #print(self.path+'trainWajah/trainingLbph.h5')
         
         print("###### Total Time Taken: ", round((time()-StartTime)/60), 'Minutes ######')
-
 
 
 class Lbphtrain:

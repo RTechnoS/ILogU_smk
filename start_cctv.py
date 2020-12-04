@@ -2,13 +2,12 @@ from threading import Thread
 import video_from_cctv as cctv
 from fungsi import c
 import tkinter as tk
-#cctv.Cctv(1).Mulai()
+
 class Manager:
 	def __init__(self):
 		winCctv = tk.Tk()
 		winCctv.title('Cctv Manager')
 		winCctv.resizable(False, False)
-		#winCctv.geometry('500x500')
 
 		self.statusCctv = tk.StringVar()
 
@@ -17,7 +16,6 @@ class Manager:
 		tk.Button(winCctv, text='Show Cctv', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Manager.showCctv).grid(row=0, column=3, padx=15)
 	
 	def cekDb():
-		#print('sini')
 		c.execute("SELECT * from camera")
 		isData = c.fetchall()
 		return isData
@@ -39,17 +37,13 @@ class Manager:
 			h.stopCctv()
 
 	def showCctv():
-		#print(cctv.Cctv.AllFrame.keys())
 		for i in cctv.Cctv.AllFrame.keys():
-			#print(Manager.cekDb()[i-1])
 			print('sini ', i)
-
 			h = cctv.Cctv(Manager.cekDb()[i-1])
-			
 			t = Thread(target=h.showFrame)
 			t.start()
 
 if __name__ == "__main__":
-	startAll()
+	Manager()
 
 

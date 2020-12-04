@@ -14,20 +14,6 @@ class Dashboard(Utama):
 		self.dash.title('Dashboard')
 		self.dash.resizable(False, False)
 
-		# self.menubar = tk.Menu(self.dash)
-
-		# fileMenu = tk.Menu(self.menubar, tearoff=0)
-		# fileMenu.add_command(label="Exit", command=self.dash.destroy)
-		# self.menubar.add_cascade(label="File", menu=fileMenu)
-
-		# toolMenu = tk.Menu(self.menubar, tearoff=0)
-		# toolMenu.add_command(label="Settings")
-		# self.menubar.add_cascade(label="Tool", menu=toolMenu)
-
-		# helpMenu = tk.Menu(self.menubar, tearoff=0)
-		# helpMenu.add_command(label="About")
-		# self.menubar.add_cascade(label="Help", menu=helpMenu)
-
 		self.frameAwal = tk.Frame(self.dash)
 		self.frameAwal.pack(fill=tk.BOTH, expand=True, padx=15, pady=15)
 		
@@ -42,14 +28,27 @@ class Dashboard(Utama):
 		tk.Button(frameBtn, text='ALERT !', state=tk.NORMAL, bg='red', fg='white', padx=20, pady=20, command=self.alertWin).grid(row=0, column=4, padx=15)
 		tk.Button(frameBtn, text='CCTV', state=tk.NORMAL, bg='blue', fg='white', padx=20, pady=20, command=Scctv.Manager).grid(row=0, column=5, padx=15)
 		tk.Button(frameBtn, text='Close', state=tk.NORMAL, command=self.testCmd).grid(row=0, column=6, padx=10)
-		#self.dash.config(menu=self.menubar)
 		self.dash.mainloop()
 		
 	def latihWajah(self):
-		if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
-			import latihWajah
-			latihWajah.Cnntrain()
-			messagebox.showinfo('Succes', "Berhasil Melatih")
+		from tkinter import ttk
+		def tanyaLatih(apa):
+			if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
+				import latihWajah
+				if apa == 'CNN':
+					latihWajah.Cnntrain()
+				else:
+					latihWajah.Lbphtrain()
+				messagebox.showinfo('Succes', "Berhasil Melatih")
+
+		__tanya = tk.Toplevel(self.dash)
+		pilihan = tk.StringVar(__tanya)
+		pilihan.set('CNN')
+
+		ttk.Combobox(__tanya, values = ('CNN', 'LBPH')).pack()
+		tk.Button(__tanya, text='Latih', command=lambda: tanyaLatih(pilihan.get())).pack()
+		__tanya.mainloop()
+
 
 	def alertWin(self):
 		import alertWin
@@ -67,7 +66,6 @@ class Dashboard(Utama):
 		openBro = ambilGam(self.dash)
 
 	def testCmd(self):
-		#exit()
 		import random, datetime
 		namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
 

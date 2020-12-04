@@ -1,5 +1,4 @@
 from time import strftime
-import random
 from mysql.connector import connect
 import cv2 as cv
 import numpy as np
@@ -11,8 +10,8 @@ namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri
 def dataB():
 	# try:
 	_conn = connect(
-			host='192.168.100.5',
-			user='root',
+			host='localhost',
+			user='kksi',
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
@@ -148,7 +147,6 @@ class faceDetect:
 				muka += [[x,y,w,h,wajah]]
 			else:
 				muka += [[x,y,w,h]]
-
 			
 		return muka
 
@@ -158,7 +156,7 @@ class faceDetect:
 					print(wajah.shape)
 					wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
 					label,confidence=self.face_recognizer.predict(wajah)#predicting the label of given image
-					if confidence > 50 and confidence < 200:
+					if confidence > 50 and confidence < 190:
 
 						predicted_name=self.name[label]
 						print(predicted_name, confidence, '%')
@@ -168,7 +166,7 @@ class faceDetect:
 				
 
 			elif self.pengenalan == 'cnn':
-				im = cv.resize(wajah, (67,67))
+				im = cv.resize(wajah, (64,64))
 				im = im[...,::-1]
 				im = np.expand_dims(im,axis=0)
 				result=self.mdlFace.predict(im,verbose=0)
@@ -183,8 +181,6 @@ class Jarak:
 		self.faces = faces
 
 	def jarakwajah(self, data):
-		#print('cek jarak')
-		#print(self.faces)
 		dataFace = DataFrame(self.faces, columns=("kiri","atas","kanan","bawah","nama"))
 	
 		x_jarak = 200
@@ -194,8 +190,9 @@ class Jarak:
 		near = []
 
 		for b in dataFace[dataFace['nama'] != data[4]].values:
-			if ((data[2]+x_jarak >= b[0] and data[2] <= b[2]+x_jarak) or (data[0]-x_jarak <= b[2] and data[0] >= b[0]+x_jarak)) and ((data[1] < b[3] and data[1] >= b[1]+y_jarak) or (data[3] <= b[3]+y_jarak and data[3] > b[1])):
-				near.append(dataFace[dataFace['nama'] == b[4]].nama.values[0])
+			if ((data[2]+x_jarak >= b[0] and data[2] <= b[2]+x_jarak) or (data[0]-x_jarak <= b[2] and data[0] >= b[0]+x_jarak)):
+				if ((data[1] < b[3] and data[1] >= b[1]+y_jarak) or (data[3] <= b[3]+y_jarak and data[3] > b[1])):
+					near.append(dataFace[dataFace['nama'] == b[4]].nama.values[0])
 		if len(near) != 0:
 			print(data[4], "Bersama dengan " , (',').join(near))
 			return (',').join(near)

@@ -13,7 +13,7 @@ class Mulai:
 	def __init__(self, window):
 		self.win = window
 		self.nama = tk.StringVar()
-		self.nama.set('Bang Jago')
+		self.nama.set('unkown')
 
 		self.kelas = tk.StringVar()
 		self.kelas.set('XII TKJ 1')
@@ -56,8 +56,6 @@ class Mulai:
 
 
 		while True:
-			#waktu = fungsi.getTime('all')
-
 			_, frame = self.cap.read()
 
 			if _ == False:
@@ -68,10 +66,8 @@ class Mulai:
 				frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
 				#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
 				frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
-					
 				faces = detector.face_dnn(frame, conf=0.45)
-				#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
-
+				
 				for (x, y, w, h) in faces:
 					imWajah = frame[y:(y+h), x:(x+w)]
 					nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
@@ -103,8 +99,6 @@ class Mulai:
 				cv.destroyAllWindows()
 				messagebox.showinfo('Succes', "Wajah Berhasil ditambahkan")
 			
-
-		#startImage()
 
 if __name__ == '__main__':
 	aa = tk.Tk()

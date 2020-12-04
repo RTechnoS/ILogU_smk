@@ -8,7 +8,6 @@ class Mulai:
 		self.showData()
 
 	def showData(self):
-		#self.updateData()
 		self.frameList = tk.Frame(self.win, bg='black')
 		self.frameList.pack(side=tk.BOTTOM, fill=tk.X)
 
@@ -38,8 +37,6 @@ class Mulai:
 			self.dataView.insert('','end', values=data)
 
 
-# Note : Rapikan fungsi database, jangan membebani. buat satu self
-
 class logSiswa(Mulai):
 	def __init__(self,win):
 		self.indexData = ('id','nama','tanggal', 'waktu', 'lokasi', 'terdekat', 'coor')
@@ -65,5 +62,3 @@ class dataSiswa(Mulai):
 		c.execute("SELECT * from dataSiswa")
 		self.isData = c.fetchall()
 		self.countData = c.rowcount
-	#def __init__(self):
-

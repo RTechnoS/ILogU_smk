@@ -1,0 +1,18 @@
+nama,oneLoc,near,hari,jumlahHari
+haikal,18,32,"[datetime.date(2020, 1, 15), datetime.date(2020, 1, 16), datetime.date(2020, 1, 2), datetime.date(2020, 1, 18), datetime.date(2020, 1, 11)]",5
+cin,10,36,"[datetime.date(2020, 1, 12), datetime.date(2020, 1, 8), datetime.date(2020, 1, 4)]",3
+dono,8,25,"[datetime.date(2020, 1, 19), datetime.date(2020, 1, 17)]",2
+putri,23,41,"[datetime.date(2020, 1, 14), datetime.date(2020, 1, 5), datetime.date(2020, 1, 3), datetime.date(2020, 1, 15), datetime.date(2020, 1, 18), datetime.date(2020, 1, 12)]",6
+dany,28,22,"[datetime.date(2020, 1, 15), datetime.date(2020, 1, 6), datetime.date(2020, 1, 4), datetime.date(2020, 1, 10), datetime.date(2020, 1, 19), datetime.date(2020, 1, 12), datetime.date(2020, 1, 16)]",7
+saipul,37,35,"[datetime.date(2020, 1, 6), datetime.date(2020, 1, 19), datetime.date(2020, 1, 13), datetime.date(2020, 1, 3), datetime.date(2020, 1, 8), datetime.date(2020, 1, 1), datetime.date(2020, 1, 15), datetime.date(2020, 1, 9), datetime.date(2020, 1, 4), datetime.date(2020, 1, 10)]",10
+geri,28,34,"[datetime.date(2020, 1, 14), datetime.date(2020, 1, 4), datetime.date(2020, 1, 3), datetime.date(2020, 1, 13), datetime.date(2020, 1, 9), datetime.date(2020, 1, 1), datetime.date(2020, 1, 11), datetime.date(2020, 1, 19)]",8
+karim,15,34,"[datetime.date(2020, 1, 4), datetime.date(2020, 1, 1), datetime.date(2020, 1, 10), datetime.date(2020, 1, 8)]",4
+fikri,20,40,"[datetime.date(2020, 1, 11), datetime.date(2020, 1, 7), datetime.date(2020, 1, 5), datetime.date(2020, 1, 16), datetime.date(2020, 1, 2), datetime.date(2020, 1, 1)]",6
+maria,15,28,"[datetime.date(2020, 1, 9), datetime.date(2020, 1, 8), datetime.date(2020, 1, 15), datetime.date(2020, 1, 16)]",4
+rizki,25,35,"[datetime.date(2020, 1, 17), datetime.date(2020, 1, 6), datetime.date(2020, 1, 1), datetime.date(2020, 1, 5), datetime.date(2020, 1, 16), datetime.date(2020, 1, 3)]",6
+dwi,15,31,"[datetime.date(2020, 1, 13), datetime.date(2020, 1, 17), datetime.date(2020, 1, 3), datetime.date(2020, 1, 14)]",4
+fajar,12,37,"[datetime.date(2020, 1, 13), datetime.date(2020, 1, 15), datetime.date(2020, 1, 6)]",3
+rifat,14,32,"[datetime.date(2020, 1, 13), datetime.date(2020, 1, 15), datetime.date(2020, 1, 16)]",3
+amanda,37,17,"[datetime.date(2020, 1, 19), datetime.date(2020, 1, 16), datetime.date(2020, 1, 4), datetime.date(2020, 1, 10), datetime.date(2020, 1, 13), datetime.date(2020, 1, 15), datetime.date(2020, 1, 11), datetime.date(2020, 1, 5), datetime.date(2020, 1, 12)]",9
+astri,14,21,"[datetime.date(2020, 1, 5), datetime.date(2020, 1, 16), datetime.date(2020, 1, 17)]",3
+zaky,20,28,"[datetime.date(2020, 1, 13), datetime.date(2020, 1, 8), datetime.date(2020, 1, 2), datetime.date(2020, 1, 14), datetime.date(2020, 1, 5), datetime.date(2020, 1, 18)]",6
