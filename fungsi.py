@@ -153,7 +153,6 @@ class faceDetect:
 	def recogWajah(self, wajah):
 		if 0 not in wajah.shape:
 			if self.pengenalan == 'lbph':
-					print(wajah.shape)
 					wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
 					label,confidence=self.face_recognizer.predict(wajah)#predicting the label of given image
 					if confidence > 60 and confidence < 170:
@@ -170,7 +169,6 @@ class faceDetect:
 				im = im[...,::-1]
 				im = np.expand_dims(im,axis=0)
 				result=self.mdlFace.predict(im,verbose=0)
-				print(self.name[np.argmax(result)])
 				return self.name[np.argmax(result)]
 		else:
 				return 'unkown'
@@ -185,7 +183,6 @@ class Jarak:
 	
 		x_jarak = 200
 		y_jarak = 100 
-		print(len(self.faces))
 
 		near = []
 
