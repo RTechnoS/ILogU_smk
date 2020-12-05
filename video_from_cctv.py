@@ -14,9 +14,6 @@ class Cctv:
 			print('Ada Error saat membuka kamera')
 
 		if self.cam.isOpened():
-			# wCam = int(self.cam.get(cv.CAP_PROP_FRAME_WIDTH))
-			# hCam = int(self.cam.get(cv.CAP_PROP_FRAME_HEIGHT))
-			# fourcc = cv.VideoWriter_fourcc(*'XVID')
 			hari = fungsi.getTime('hari')
 			nama = hari+'_'+self.namaCCTV
 			self.video_writer = cv.VideoWriter(f"rekaman/{nama}.mkv", cv.VideoWriter_fourcc(*'XVID'), 25, (int(self.cam.get(cv.CAP_PROP_FRAME_WIDTH)), int(self.cam.get(cv.CAP_PROP_FRAME_HEIGHT))))
@@ -29,21 +26,15 @@ class Cctv:
  
 			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened():
 				_, Cctv.AllFrame[self.idCam][0] = self.cam.read()
-				# if _ == False:
-				# 	continue
 
-				#try:
-				#if 1+1 == 2:
 				if int(self.cam.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
 					frame = Cctv.AllFrame[self.idCam][0]
 					waktu = fungsi.getTime()
 
 					#frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
 					#frame = cv.resize(Cctv.AllFrame[self.idCam][0], (640,480))
-					#cv.putText(frame, waktu, (10,10), fontFace=cv.FONT_HERSHEY_PLAIN, fontScale=1, color=(0,0,0))
 
 					faces = detector2.face_dnn(frame, conf=0.25)
-					#faces = detector.face_haar(frame, minSize=(2,2))
 
 					if len(faces) < minJumlah: # jika jumlah yg di diteksi detect1 kurang dari (minJumlah)
 						faces = detector.face_haar(frame)
@@ -61,8 +52,6 @@ class Cctv:
 							
 						#cv.putText(frame, wajah,(x, y-25), cv.FONT_HERSHEY_SIMPLEX, fontScale=1,thickness=1, color=(15,15, 249))
 
-				# except Exception as e:
-				# 	print(e)
 				self.video_writer.write(Cctv.AllFrame[self.idCam][0])
 
 			print(self.name, ' Terhenti')

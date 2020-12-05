@@ -94,12 +94,10 @@ class Lbphtrain:
             
             for filename in filenames:
                 if filename.startswith("."):
-                    print("File system")#Skipping files that startwith .
+                    print("File system")
                     continue
-                img_path=os.path.join(path,filename)#fetching image path
-                #print("img_path:",img_path)
-                #print("id:",num)
-                test_img=cv2.imread(img_path)#loading each image one by one
+                img_path=os.path.join(path,filename)
+                test_img=cv2.imread(img_path)
                 if test_img is None:
                     print("Gambar tidak bisa di baca")
                     continue

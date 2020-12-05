@@ -45,7 +45,6 @@ class lacak:
 
 		for g in set(self.logTeman.Nama.unique()):
 			self.dataF = self.dataF.append({'nama':g, 'near':self.logTerdekat.count(g), 'hari':list(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique()), 'jumlahHari':len(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique())} , ignore_index=True)
-		#print(self.logKorban)
 		tanggalKorban = self.logKorban.sort_values(by='Tanggal').Tanggal.unique() # semua tanggal saat korban terlacak
 		
 		d = list()
@@ -58,7 +57,6 @@ class lacak:
 		self.dataF = self.dataF.set_index('nama')
 		for na in self.dataF.index:
 			self.dataF.at[na, 'oneLoc'] = d.count(na)
-		#print(self.dataF)
 		self.dataF.to_csv(f'find/{self.namaKorban}.csv', index = True)
 
 

@@ -1,6 +1,7 @@
 import fungsi, time
 import tkinter as tk
 from tkinter import ttk
+
 dB = fungsi.dB
 c = fungsi.c
 
@@ -11,7 +12,6 @@ class Main:
 		self.namaKorban.set('udin')
 		self.formData()
 		
-
 	def formData(self):
 		self.frmDaftar = tk.Toplevel(self.dash)
 		self.frmDaftar.geometry('400x50')

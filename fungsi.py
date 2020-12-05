@@ -5,10 +5,7 @@ import numpy as np
 from pandas import DataFrame
 from datetime import timedelta
 
-namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri', 'amanda','dono', 'astri','dany', 'karim', 'fajar', 'saipul', 'putri', 'rizki'] 
-
 def dataB():
-	# try:
 	_conn = connect(
 			host='192.168.100.5',
 			user='root',
@@ -16,11 +13,8 @@ def dataB():
 			db='covidtrack',
 			auth_plugin='mysql_native_password'
 		)
-	# if mysql_conn.is_connected():
-	# 	return mysql_conn
 	return _conn
-	# except:
-	# 	print('Ada Masalah pada database')
+
 
 dB = dataB()
 c = dB.cursor(buffered=True)
