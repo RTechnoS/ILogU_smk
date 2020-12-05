@@ -10,8 +10,8 @@ namaFake = ['haikal','maria','zaky','rifat', 'fikri', 'dwi','udin', 'cin', 'geri
 def dataB():
 	# try:
 	_conn = connect(
-			host='localhost',
-			user='kksi',
+			host='192.168.100.5',
+			user='root',
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'

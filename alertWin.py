@@ -1,6 +1,6 @@
 import fungsi, time
 import tkinter as tk
-
+from tkinter import ttk
 dB = fungsi.dB
 c = fungsi.c
 
@@ -36,7 +36,8 @@ class Main:
 
 		self.korban = self.namaKorban.get()
 		dd = lck.lacak(self.namaKorban.get())
-
+		self.logKorban = dd.ambilKorban()
+		print(dd)
 		self.aturData()
 		self.showPlt()
 
@@ -48,6 +49,36 @@ class Main:
 		self.forPlot = self.dataF.sort_values(by=['near', 'oneLoc'])
 		if len(self.dataF) >= 15:
 			self.forPlot = self.forPlot.head(15)
+
+	def showData(self):
+		indexData = list(self.logKorban.keys())
+		self.frameList = tk.Frame(self.__frmLog, bg='black')
+		self.frameList.pack(side=tk.BOTTOM)
+
+		style = ttk.Style(self.frameList)
+		style.configure('Treeview', rowheight=25, height=100)
+
+		self.dataView = ttk.Treeview(self.frameList,selectmode='browse')
+		self.dataView.grid(row=0, column=1,columnspan=2)
+		self.dataView.config(columns=indexData,show = "headings")
+
+		for t1,t2,t3 in zip(indexData, ('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Koordinat'), (160, 100, 100, 100, 120, 180)):
+			self.dataView.heading(t1, text=t2)
+			self.dataView.column(t1, width=t3)
+
+		self.isiDataList()
+
+		scrollData = ttk.Scrollbar(self.frameList, orient="vertical", command=self.dataView.yview)
+		scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
+		self.dataView.configure(yscrollcommand=scrollData.set)
+
+	def isiDataList(self):
+		isData = self.logKorban.values.tolist()
+		for i in self.dataView.get_children():
+			self.dataView.detach(i)
+
+		for num, data in enumerate(isData):
+			self.dataView.insert('','end', values=data)
 
 	def showPlt(self):
 		import matplotlib.pyplot as plt
@@ -93,4 +124,5 @@ class Main:
 
 		canvas = FigureCanvasTkAgg(fig, self.__frmLog)
 		canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH)
+		self.showData()
 
