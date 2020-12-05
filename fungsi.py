@@ -56,7 +56,7 @@ def addLog(**data):
 		cc.execute(__sqlAdd, __dataSql)
 		dBB.commit()
 	else:
-		if (now.total_seconds()-isData[3].total_seconds()) >= 8:
+		if (now.total_seconds()-isData[3].total_seconds()) >= 6:
 			__sqlAdd = 'INSERT INTO logSiswa (nama, tanggal, waktu, lokasi, terdekat, coor) VALUES (%s,%s,%s,%s,%s,%s)'
 			__dataSql = (data['nama'], data['tanggal'], data['waktu'], data['lokasi'], data['terdekat'], data['coor'])
 			cc.execute(__sqlAdd, __dataSql)
@@ -156,7 +156,7 @@ class faceDetect:
 					print(wajah.shape)
 					wajah = cv.cvtColor(wajah, cv.COLOR_BGR2GRAY)
 					label,confidence=self.face_recognizer.predict(wajah)#predicting the label of given image
-					if confidence > 50 and confidence < 190:
+					if confidence > 60 and confidence < 170:
 
 						predicted_name=self.name[label]
 						print(predicted_name, confidence, '%')

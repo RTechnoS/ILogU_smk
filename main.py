@@ -35,7 +35,9 @@ class Dashboard(Utama):
 		def tanyaLatih(apa):
 			if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
 				import latihWajah
+				print(apa)
 				if apa == 'CNN':
+
 					latihWajah.Cnntrain()
 				else:
 					latihWajah.Lbphtrain()
@@ -45,7 +47,7 @@ class Dashboard(Utama):
 		pilihan = tk.StringVar(__tanya)
 		pilihan.set('CNN')
 
-		ttk.Combobox(__tanya, values = ('CNN', 'LBPH')).pack()
+		cb = ttk.Combobox(__tanya,textvariable = pilihan, values = ('CNN', 'LBPH')).pack()
 		tk.Button(__tanya, text='Latih', command=lambda: tanyaLatih(pilihan.get())).pack()
 		__tanya.mainloop()
 

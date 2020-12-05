@@ -24,8 +24,8 @@ class Cctv:
 
 			print(self.namaCCTV, 'Kamera Mulai')
 
-			detector = fungsi.faceDetect('haar', pengenalan='cnn') 
-			detector2 = fungsi.faceDetect('dnn', pengenalan='cnn') # BAKUP
+			detector = fungsi.faceDetect('haar', pengenalan='lbph') 
+			detector2 = fungsi.faceDetect('dnn', pengenalan='lbph') # BAKUP
  
 			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened():
 				_, Cctv.AllFrame[self.idCam][0] = self.cam.read()
@@ -45,8 +45,8 @@ class Cctv:
 					faces = detector2.face_dnn(frame, conf=0.25)
 					#faces = detector.face_haar(frame, minSize=(2,2))
 
-					# if len(faces) < minJumlah: # jika jumlah yg di diteksi detect1 kurang dari (minJumlah)
-					# 	faces = detector.face_haar(frame)
+					if len(faces) < minJumlah: # jika jumlah yg di diteksi detect1 kurang dari (minJumlah)
+						faces = detector.face_haar(frame)
 
 					if len(faces) > 1: # jika lebih 2 orang ter detect maka cek jarak
 						jarak = fungsi.Jarak(faces)

@@ -2,6 +2,7 @@ import cv2
 import os
 import numpy as np
 import pickle
+
 class Cnntrain:
     from keras.models import save_model
     from keras.preprocessing.image import ImageDataGenerator
