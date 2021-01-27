@@ -1,21 +1,24 @@
 import tkinter as tk
 import fungsi
 import start_cctv as Scctv
-from tkinter import messagebox
-
 print(fungsi.getTime('all'))
 
 class Dashboard:
 	def __init__(self, master):
+		
 		self.dash = master
+		p1 = tk.PhotoImage(file = 'logo1.png')
+		master.iconphoto(True, p1)
 		self.dash.geometry('800x550')
-		self.dash.title('Dashboard')
+		
+		#self.dash.configure()
+		self.dash.title('I Log U')
 		self.dash.resizable(False, False)
 
 		self.frameAwal = tk.Frame(self.dash)
 		self.frameAwal.pack(fill=tk.BOTH, expand=True, padx=15, pady=15)
 		
-		tk.Label(self.frameAwal, text='Aplikasi pelacak Covid-19 Sekolah', fg='red', font=('calibri', 20)).pack()
+		tk.Label(self.frameAwal, text='Aplikasi pelacak Covid-19 Sekolah',  fg='red', font=('calibri', 20)).pack()
 
 		frameBtn = tk.Frame(self.frameAwal)
 		frameBtn.pack(side=tk.BOTTOM, fill=tk.X)
@@ -30,15 +33,14 @@ class Dashboard:
 	def latihWajah(self):
 		from tkinter import ttk
 		def tanyaLatih(apa):
-			if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
+			if tk.messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
 				import latihWajah
 				print(apa)
 				if apa == 'CNN':
-
 					latihWajah.Cnntrain()
 				else:
 					latihWajah.Lbphtrain()
-				messagebox.showinfo('Succes', "Berhasil Melatih")
+				tk.messagebox.showinfo('Succes', "Berhasil Melatih")
 
 		__tanya = tk.Toplevel(self.dash)
 		pilihan = tk.StringVar(__tanya)
