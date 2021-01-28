@@ -7,8 +7,8 @@ from datetime import timedelta
 
 def dataB():
 	_conn = connect(
-			host='192.168.100.5',
-			user='root',
+			host='192.168.100.5', #192.168.100.5 #localhost
+			user='root', #root #kksi
 			passwd='Smkn1.Bkl',
 			db='covidtrack',
 			auth_plugin='mysql_native_password'

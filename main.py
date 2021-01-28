@@ -7,7 +7,7 @@ class Dashboard:
 	def __init__(self, master):
 		
 		self.dash = master
-		p1 = tk.PhotoImage(file = 'logo1.png')
+		p1 = tk.PhotoImage(file = 'logo.png')
 		master.iconphoto(True, p1)
 		self.dash.geometry('800x550')
 		
