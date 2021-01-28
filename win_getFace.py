@@ -1,0 +1,104 @@
+import cv2 as cv
+import os, fungsi
+import tkinter as tk
+
+font = cv.FONT_HERSHEY_SIMPLEX
+detector = fungsi.faceDetect('dnn')
+
+class Mulai:
+	def __init__(self, window):
+		self.win = window
+		self.nama = tk.StringVar()
+		self.nama.set('unkown')
+
+		self.kelas = tk.StringVar()
+		self.kelas.set('XII TKJ 1')
+		self.__mydb = fungsi.dB
+		self.c = fungsi.c
+		self.awalan()
+
+	def closing_win(self):
+		if tk.messagebox.askokcancel("Quit", "Apakah anda ingin keluar ?"):
+			self.cap.release()
+			cv.destroyAllWindows()
+
+	def awalan(self):
+		self.__winDaftar = tk.Toplevel(self.win)
+		self.__winDaftar.title('Daftar')
+		
+		__frmAwl = tk.Frame(self.__winDaftar)
+		__frmAwl.grid(row=0, column=0, padx=30, pady=20)
+
+		tk.Label(__frmAwl, text='Nama = ').grid(row=0, column=1)
+		tk.Entry(__frmAwl, textvariable=self.nama).grid(row=0, column=2)
+		
+		tk.Label(__frmAwl, text='Kelas = ').grid(row=1, column=1)
+		tk.Entry(__frmAwl, textvariable=self.kelas).grid(row=1, column=2, pady=5)
+
+		tk.Button(__frmAwl, text='Mulai', command=self.startCap).grid(row=2, column=1, pady=20)
+		
+
+	def startCap(self):
+		self.__winDaftar.destroy()
+
+		#self.cap = cv.VideoCapture('http://192.168.100.209:4747/video')
+		#self.cap = cv.VideoCapture('../videoContoh/rusman.mp4')
+		self.cap = cv.VideoCapture(0)
+
+		self.jumlahCap = 0
+		nama = (self.nama.get()).replace(' ', '_')
+		if not os.path.isdir(f'dataset/{nama}'):
+			os.mkdir(f'dataset/{nama}')
+
+
+		while True:
+			_, frame = self.cap.read()
+
+			if _ == False:
+				print('Video selesai')
+				break
+			if int(self.cap.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
+				frame = cv.flip(frame, 1)
+				frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
+				#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
+				frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
+				faces = detector.face_dnn(frame, conf=0.45)
+				
+				for (x, y, w, h) in faces:
+					imWajah = frame[y:(y+h), x:(x+w)]
+					nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
+					cv.imwrite(nl, imWajah)
+					cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
+					cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
+					self.jumlahCap += 1
+
+				cv.imshow('Perekaman', frame)
+
+			if self.jumlahCap <= 160:
+				if cv.waitKey(20) & 0xFF == ord('q'):
+					self.closing_win()
+
+			else:
+				__sql = "SELECT * from dataSiswa where nama=%s and kelas=%s"
+				__data = (self.nama.get(), self.kelas.get())
+				self.c.execute(__sql, __data)
+				isData = self.c.fetchall()
+
+				if len(isData) == 0:
+					__sqlAdd = 'INSERT INTO dataSiswa (nama, kelas) VALUES (%s,%s)'
+					__dataSql = (self.nama.get(), self.kelas.get())
+					self.c.execute(__sqlAdd, __dataSql)
+					self.__mydb.commit()
+
+				print('Berhasil Disimpan')
+				self.cap.release()
+				cv.destroyAllWindows()
+				tk.messagebox.showinfo('Succes', "Wajah Berhasil ditambahkan")
+			
+
+if __name__ == '__main__':
+	aa = tk.Tk()
+	Mulai(aa)
+	aa.mainloop()
+
+cv.destroyAllWindows()

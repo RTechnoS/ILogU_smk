@@ -1,0 +1,17 @@
+menghapus self. pada faces dan fces di video_from cctv
+
+incude pengenalan wajah pada deteksi wajah(agar lebih cepat) dalam satu fungsi, merombak kode untk memanggil deteksi jarak pada video_from_cctv , ubah tipe data frame dan on/off dari dict menjadi list (beta semua, belum dicoba), memperbaki addLog untuk multi thread, menambahkan file percobaan_pandas untuk di pakai di alert, dan menambah file catatan
+
+
+membersihkian komen, mengubah minSize di face_haar dari 2,2 menjadi 4,4 , memperbaiki cvtColor/ salah dibagian ambil frame face_dnn, menghapus variable pada button di main.py, mencoba face detect pengambilan_gambar menggunakan dnn, agar lebih akurat
+
+
+
+from pandas import DataFrame (fungsi.py, alertWin.py), menggabungkan fungsi logData(main.py) dengan if, mempersingkat beberapa module pada fungsi.py, masih ragu from fungsi import c (start_cctv.py), membuat proses video menggunakan variable frame bukan menggunakan Main.AllFrame lagi, 
+
+Memasukkan pyplot di dalam tkinter, merapikan tkinter, membuat select algoritma untuk melatih wajah, bersih-bersih kode, jangan luoa hapus test Command di main.py, membagi dua if cek jarakWajah
+
+
+Ubah {1:{'frame':[], 'on':True}}
+
+menjadi {1:[frame, on/off]}

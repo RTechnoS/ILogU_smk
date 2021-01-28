@@ -1,6 +1,6 @@
 import tkinter as tk
 import fungsi
-import start_cctv as Scctv
+import win_cctv as Scctv
 print(fungsi.getTime('all'))
 
 class Dashboard:
@@ -34,12 +34,12 @@ class Dashboard:
 		from tkinter import ttk
 		def tanyaLatih(apa):
 			if tk.messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
-				import latihWajah
+				import fungsi_train
 				print(apa)
 				if apa == 'CNN':
-					latihWajah.Cnntrain()
+					fungsi_train.Cnntrain()
 				else:
-					latihWajah.Lbphtrain()
+					fungsi_train.Lbphtrain()
 				tk.messagebox.showinfo('Succes', "Berhasil Melatih")
 
 		__tanya = tk.Toplevel(self.dash)
@@ -52,18 +52,18 @@ class Dashboard:
 
 
 	def alertWin(self):
-		import alertWin
-		alertWin.Main(self.dash)
+		import win_alert
+		win_alert.Main(self.dash)
 	
 	def logData(self, apo):
-		import view_data as winData
+		import win_log
 		if apo == 0:
-			winData.logSiswa(self.dash)
+			win_log.logSiswa(self.dash)
 		else:
-			winData.dataSiswa(self.dash)
+			win_log.dataSiswa(self.dash)
 
 	def addWajah(self):
-		from pengambilan_gambar import Mulai as ambilGam
+		from win_getFace import Mulai as ambilGam
 		openBro = ambilGam(self.dash)
 
 Dashboard(tk.Tk())
