@@ -35,10 +35,10 @@ class Manager:
 		for i in cctv.Cctv.AllFrame.keys():
 			h = cctv.Cctv(Manager.cekDb()[i-1])
 			h.stopCctv()
+			#cctv.Cctv.AllFrame.pop(i)
 
 	def showCctv():
 		for i in cctv.Cctv.AllFrame.keys():
-			print('sini ', i)
 			h = cctv.Cctv(Manager.cekDb()[i-1])
 			t = Thread(target=h.showFrame)
 			t.start()
