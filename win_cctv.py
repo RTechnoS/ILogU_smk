@@ -20,14 +20,21 @@ class Manager:
 		isData = c.fetchall()
 		return isData
 
+	def start_cctv(i):
+		print(i)
+		h = cctv.Cctv(i)
+		t = Thread(target=h.Mulai)
+		t.start()
+
 	def startAll():
 		for i in Manager.cekDb():
 			idCam = i[0]
-			if idCam not in cctv.Cctv.AllFrame or cctv.Cctv.AllFrame[idCam][1] != True:
-				print(i)
-				h = cctv.Cctv(i)
-				t = Thread(target=h.Mulai)
-				t.start()
+			if idCam not in cctv.Cctv.AllFrame:
+				Manager.start_cctv(i)
+			elif idCam in cctv.Cctv.AllFrame:
+				print('Masih ada cache')
+				if cctv.Cctv.AllFrame[idCam][0] == [] or cctv.Cctv.AllFrame[idCam][1] != True:
+					Manager.start_cctv(i)
 			else:
 				print('Camera', idCam, 'sudah aktif')
 

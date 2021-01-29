@@ -21,14 +21,15 @@ class Cctv:
 
 			print(self.namaCCTV, 'Kamera Mulai')
 
-			detector = fungsi.faceDetect('haar', pengenalan='lbph') 
-			detector2 = fungsi.faceDetect('dnn', pengenalan='lbph') # BAKUP
+			detector = fungsi.faceDetect('haar', pengenalan='cnn') 
+			detector2 = fungsi.faceDetect('dnn', pengenalan='cnn') # BAKUP
  
-			while Cctv.AllFrame[self.idCam][1] == True and self.cam.isOpened() and self.idCam in Cctv.AllFrame:
+			while self.cam.isOpened() and self.idCam in Cctv.AllFrame and Cctv.AllFrame[self.idCam][1] == True:
 				try:
 					_, Cctv.AllFrame[self.idCam][0] = self.cam.read()
 				except:
 					frame = zeros((640,640))
+					print(frame)
 
 				if int(self.cam.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
 					frame = Cctv.AllFrame[self.idCam][0]
@@ -71,18 +72,26 @@ class Cctv:
 		cv.destroyAllWindows()
 
 	def showFrame(self):
-		
+		err = 0
 		while Cctv.AllFrame[self.idCam][1] and self.idCam in Cctv.AllFrame:	
-			if Cctv.AllFrame[self.idCam][0] == []:
-				print('error')
-				Cctv.AllFrame[self.idCam][1] = zeros((640,640))
-					#break
-			else:
+			# if Cctv.AllFrame[self.idCam][0] == None:
+			# 	print('error')
+			# 	Cctv.AllFrame[self.idCam][0] = zeros((640,640))
+			# 		#break
+			try:
 				frame = cv.resize(Cctv.AllFrame[self.idCam][0], (640,480))
 				cv.imshow(self.namaCCTV, frame)
-
-				if cv.waitKey(20) & 0xFF == 27:
+			except:
+				err += 1
+				Cctv.AllFrame[self.idCam][0] = zeros((640,640))
+				if err >= 5:
+					print('error')
+					Cctv.AllFrame[self.idCam] = [[], False]
 					break
+
+			if cv.waitKey(20) & 0xFF == 27:
+				break
+
 		cv.destroyAllWindows()
 
 if __name__ == '__main__':

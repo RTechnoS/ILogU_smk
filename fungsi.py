@@ -163,6 +163,7 @@ class faceDetect:
 				im = im[...,::-1]
 				im = np.expand_dims(im,axis=0)
 				result=self.mdlFace.predict(im,verbose=0)
+				print(self.name[np.argmax(result)])
 				return self.name[np.argmax(result)]
 		else:
 				return 'unkown'
