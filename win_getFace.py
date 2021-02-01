@@ -41,9 +41,9 @@ class Mulai:
 	def startCap(self):
 		self.__winDaftar.destroy()
 
-		#self.cap = cv.VideoCapture('http://192.168.100.209:4747/video')
+		self.cap = cv.VideoCapture('http://192.168.100.201:4747/video')
 		#self.cap = cv.VideoCapture('../videoContoh/rusman.mp4')
-		self.cap = cv.VideoCapture(0)
+		#self.cap = cv.VideoCapture(0)
 
 		self.jumlahCap = 0
 		nama = (self.nama.get()).replace(' ', '_')

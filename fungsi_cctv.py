@@ -21,8 +21,8 @@ class Cctv:
 
 			print(self.namaCCTV, 'Kamera Mulai')
 
-			detector = fungsi.faceDetect('haar', pengenalan='cnn') 
-			detector2 = fungsi.faceDetect('dnn', pengenalan='cnn') # BAKUP
+			detector = fungsi.faceDetect('haar', pengenalan='lbph') 
+			detector2 = fungsi.faceDetect('dnn', pengenalan='lbph') # BAKUP
  
 			while self.cam.isOpened() and self.idCam in Cctv.AllFrame and Cctv.AllFrame[self.idCam][1] == True:
 				try:
