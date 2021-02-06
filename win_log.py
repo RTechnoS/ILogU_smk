@@ -7,6 +7,8 @@ class Mulai:
 		self.win = tk.Toplevel(win)
 		self.showData()
 
+
+
 	def showData(self):
 		self.frameList = tk.Frame(self.win, bg='black')
 		self.frameList.pack(side=tk.BOTTOM, fill=tk.X)
@@ -27,7 +29,12 @@ class Mulai:
 		scrollData = ttk.Scrollbar(self.frameList, orient="vertical", command=self.dataView.yview)
 		scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
 		self.dataView.configure(yscrollcommand=scrollData.set)
+		self.dataView.bind("<Double-1>", self.OnDoubleClick)
 	
+	def OnDoubleClick(self, event):
+		#print(event)
+		print(self.dataView.item(self.dataView.selection()[0]))
+
 	def isiDataList(self):
 		self.updateData()
 		for i in self.dataView.get_children():

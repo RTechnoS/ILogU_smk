@@ -1,6 +1,7 @@
 import cv2 as cv
 import os, fungsi
 import tkinter as tk
+from tkinter import messagebox
 
 font = cv.FONT_HERSHEY_SIMPLEX
 detector = fungsi.faceDetect('dnn')
@@ -18,7 +19,7 @@ class Mulai:
 		self.awalan()
 
 	def closing_win(self):
-		if tk.messagebox.askokcancel("Quit", "Apakah anda ingin keluar ?"):
+		if messagebox.askokcancel("Quit", "Apakah anda ingin keluar ?"):
 			self.cap.release()
 			cv.destroyAllWindows()
 
@@ -57,24 +58,27 @@ class Mulai:
 			if _ == False:
 				print('Video selesai')
 				break
-			if int(self.cap.get(cv.CAP_PROP_POS_FRAMES)) % 10 == 0:
-				frame = cv.flip(frame, 1)
-				frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
+			frame = cv.resize(frame, (int(frame.shape[1]/2),int(frame.shape[0]/2)))
+			
+			if int(self.cap.get(cv.CAP_PROP_POS_FRAMES)) % 2 == 0:
+				#frame = cv.flip(frame, 1)
 				#frame = cv.rotate(frame, cv.ROTATE_90_CLOCKWISE)
-				frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
+				#frame = cv.rotate(frame, cv.ROTATE_90_COUNTERCLOCKWISE)
 				faces = detector.face_dnn(frame, conf=0.45)
 				
 				for (x, y, w, h) in faces:
+
 					imWajah = frame[y:(y+h), x:(x+w)]
 					nl =  f'dataset/{nama}/{self.jumlahCap}_{nama}.jpg'
-					cv.imwrite(nl, imWajah)
-					cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
-					cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
-					self.jumlahCap += 1
+					if 0 not in imWajah.shape:
+						cv.imwrite(nl, imWajah)
+						cv.rectangle(frame, (x,y), (x+w, y+h), color=(57,196,35), thickness=3)
+						cv.putText(frame, "capture :"+str(self.jumlahCap),(x, y-25), font, fontScale=1,thickness=1, color=(15,15, 249))
+						self.jumlahCap += 1
 
-				cv.imshow('Perekaman', frame)
+			cv.imshow('Perekaman', frame)
 
-			if self.jumlahCap <= 160:
+			if self.jumlahCap <= 800:
 				if cv.waitKey(20) & 0xFF == ord('q'):
 					self.closing_win()
 
@@ -93,7 +97,7 @@ class Mulai:
 				print('Berhasil Disimpan')
 				self.cap.release()
 				cv.destroyAllWindows()
-				tk.messagebox.showinfo('Succes', "Wajah Berhasil ditambahkan")
+				messagebox.showinfo('Succes', "Wajah Berhasil ditambahkan")
 			
 
 if __name__ == '__main__':

@@ -1,6 +1,8 @@
 import tkinter as tk
 import fungsi
 import win_cctv as Scctv
+from tkinter import messagebox
+
 print(fungsi.getTime('all'))
 
 class Dashboard:
@@ -33,14 +35,14 @@ class Dashboard:
 	def latihWajah(self):
 		from tkinter import ttk
 		def tanyaLatih(apa):
-			if tk.messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
+			if messagebox.askokcancel("Latih", "Apakah Anda ingin melatih wajah ?"):
 				import fungsi_train
 				print(apa)
 				if apa == 'CNN':
 					fungsi_train.Cnntrain()
 				else:
 					fungsi_train.Lbphtrain()
-				tk.messagebox.showinfo('Succes', "Berhasil Melatih")
+				messagebox.showinfo('Succes', "Berhasil Melatih")
 
 		__tanya = tk.Toplevel(self.dash)
 		pilihan = tk.StringVar(__tanya)

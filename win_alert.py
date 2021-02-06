@@ -21,11 +21,44 @@ class Main:
 
 		tk.Label(self.frmDaftar, text='Nama : ').grid(row=0,column=1)
 		inNama = tk.Entry(self.frmDaftar, textvariable=self.namaKorban).grid(row=0, column=2)
-		tk.Button(self.frmDaftar, text='Cari', width=10, command=self.winLacak).grid(row=0, column=4, padx=15)
+		tk.Button(self.frmDaftar, text='Cari', width=10, command=self.selectSiswa).grid(row=0, column=4, padx=15)
 		self.frmDaftar.mainloop()
 
-	def winLacak(self):
+
+	def selectSiswa(self):
 		self.frmDaftar.destroy()
+		self.listKorban = tk.Toplevel(self.dash)
+
+		__cek = "SELECT * FROM dataSiswa WHERE nama LIKE '%{}%'".format(self.namaKorban.get())
+		c.execute(__cek)
+		_isiData = c.fetchall()
+		if len(_isiData) >= 1:
+			style = ttk.Style(self.listKorban)
+			style.configure('Treeview', rowheight=25, height=50)
+
+			self.dataView = ttk.Treeview(self.listKorban)
+			self.dataView.grid(row=0, column=1,columnspan=2)
+			self.dataView.config(columns=('no', 'nama', 'kelas'), show = "headings")
+			
+			for t1,t2,t3 in zip(('no', 'nama', 'kelas'),('No', 'Nama', 'Kelas'), (30, 175, 120)):
+				self.dataView.heading(t1, text=t2)
+				self.dataView.column(t1, width=t3)
+
+			for num, data in enumerate(_isiData):
+				self.dataView.insert('','end', values=data)
+
+			scrollData = ttk.Scrollbar(self.listKorban, orient="vertical", command=self.dataView.yview)
+			scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
+			self.dataView.configure(yscrollcommand=scrollData.set)
+			self.dataView.bind("<Double-1>", self.winLacak)
+		else:
+			tk.Label(self.listKorban, text='Siswa Tidak Ditemukan', padx=20, pady=20,  fg='red', font=('calibri', 15)).pack()
+			
+	def winLacak(self, event):
+
+		p = self.dataView.item(self.dataView.selection()[0])
+		self.listKorban.destroy()
+		self.namaKorban = p['values'][1]
 		self.__frmLog = tk.Toplevel(self.dash)
 		self.__frmLog.geometry('500x500')
 		self.logWin()
@@ -34,8 +67,8 @@ class Main:
 	def logWin(self):
 		import fungsi_extrak
 		
-		self.korban = self.namaKorban.get()
-		dd = fungsi_extrak.lacak(self.namaKorban.get())
+		self.korban = self.namaKorban
+		dd = fungsi_extrak.lacak(self.namaKorban)
 		self.logKorban = dd.ambilKorban()
 		print(dd)
 		self.aturData()
