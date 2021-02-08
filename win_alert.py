@@ -1,15 +1,15 @@
-import fungsi, time
+import fungsi
+from datetime import timedelta
 import tkinter as tk
 from tkinter import ttk
 
-dB = fungsi.dB
 c = fungsi.c
 
 class Main:
 	def __init__(self, dash):
 		self.dash = dash
 		self.namaKorban = tk.StringVar()
-		self.namaKorban.set('udin')
+		self.namaKorban.set('rusman')
 		self.formData()
 		
 	def formData(self):
@@ -24,43 +24,48 @@ class Main:
 		tk.Button(self.frmDaftar, text='Cari', width=10, command=self.selectSiswa).grid(row=0, column=4, padx=15)
 		self.frmDaftar.mainloop()
 
+	def showListData(self, window, dataList):
+		_isiData, column, titleCol, sizeCol = dataList
+		style = ttk.Style(window)
+		style.configure('Treeview', rowheight=25, height=50)
+
+		dataView = ttk.Treeview(window)
+
+		dataView.config(columns=column, show = "headings")
+			
+		for t1,t2,t3 in zip(column,titleCol, sizeCol):
+			dataView.heading(t1, text=t2)
+			dataView.column(t1, width=t3)
+
+		for num, data in enumerate(_isiData):
+			dataView.insert('','end', values=data)
+
+		scrollData = ttk.Scrollbar(window, orient="vertical", command=dataView.yview)
+		scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
+		dataView.configure(yscrollcommand=scrollData.set)
+		return dataView
+
 
 	def selectSiswa(self):
 		self.frmDaftar.destroy()
 		self.listKorban = tk.Toplevel(self.dash)
-
-		__cek = "SELECT * FROM dataSiswa WHERE nama LIKE '%{}%'".format(self.namaKorban.get())
-		c.execute(__cek)
+		c.execute("SELECT * FROM dataSiswa WHERE nama LIKE '%{}%'".format(self.namaKorban.get()))
 		_isiData = c.fetchall()
+
 		if len(_isiData) >= 1:
-			style = ttk.Style(self.listKorban)
-			style.configure('Treeview', rowheight=25, height=50)
-
-			self.dataView = ttk.Treeview(self.listKorban)
-			self.dataView.grid(row=0, column=1,columnspan=2)
-			self.dataView.config(columns=('no', 'nama', 'kelas'), show = "headings")
-			
-			for t1,t2,t3 in zip(('no', 'nama', 'kelas'),('No', 'Nama', 'Kelas'), (30, 175, 120)):
-				self.dataView.heading(t1, text=t2)
-				self.dataView.column(t1, width=t3)
-
-			for num, data in enumerate(_isiData):
-				self.dataView.insert('','end', values=data)
-
-			scrollData = ttk.Scrollbar(self.listKorban, orient="vertical", command=self.dataView.yview)
-			scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
-			self.dataView.configure(yscrollcommand=scrollData.set)
-			self.dataView.bind("<Double-1>", self.winLacak)
+			self.sameName = self.showListData(self.listKorban, (_isiData,('no', 'nama', 'kelas'),('No', 'Nama', 'Kelas'), (30, 175, 120)))
+			self.sameName.grid(row=0, column=1,columnspan=2)
+			self.sameName.bind("<Double-1>", self.winLacak)
 		else:
 			tk.Label(self.listKorban, text='Siswa Tidak Ditemukan', padx=20, pady=20,  fg='red', font=('calibri', 15)).pack()
 			
 	def winLacak(self, event):
-
-		p = self.dataView.item(self.dataView.selection()[0])
+		p = self.sameName.item(self.sameName.selection()[0])
 		self.listKorban.destroy()
+
 		self.namaKorban = p['values'][1]
 		self.__frmLog = tk.Toplevel(self.dash)
-		self.__frmLog.geometry('500x500')
+		self.__frmLog.geometry('700x700')
 		self.logWin()
 		self.__frmLog.mainloop()
 
@@ -69,8 +74,10 @@ class Main:
 		
 		self.korban = self.namaKorban
 		dd = fungsi_extrak.lacak(self.namaKorban)
-		self.logKorban = dd.ambilKorban()
-		print(dd)
+		self.logKorban, self.logTeman = dd.ambilKorban()
+		#print(self.logKorban.Waktu)
+		#print(self.logTeman.Waktu)
+		#print(dd.ambilKorban())
 		self.aturData()
 		self.showPlt()
 
@@ -87,31 +94,28 @@ class Main:
 		indexData = list(self.logKorban.keys())
 		self.frameList = tk.Frame(self.__frmLog, bg='black')
 		self.frameList.pack(side=tk.BOTTOM)
-
-		style = ttk.Style(self.frameList)
-		style.configure('Treeview', rowheight=25, height=100)
-
-		self.dataView = ttk.Treeview(self.frameList,selectmode='browse')
-		self.dataView.grid(row=0, column=1,columnspan=2)
-		self.dataView.config(columns=indexData,show = "headings")
-
-		for t1,t2,t3 in zip(indexData, ('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Koordinat'), (160, 100, 100, 100, 120, 180)):
-			self.dataView.heading(t1, text=t2)
-			self.dataView.column(t1, width=t3)
-
-		self.isiDataList()
-
-		scrollData = ttk.Scrollbar(self.frameList, orient="vertical", command=self.dataView.yview)
-		scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
-		self.dataView.configure(yscrollcommand=scrollData.set)
-
-	def isiDataList(self):
 		isData = self.logKorban.values.tolist()
-		for i in self.dataView.get_children():
-			self.dataView.detach(i)
+		#print(isData)
+		self.hisData = self.showListData(self.frameList, (isData, indexData, ('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Koordinat'), (160, 100, 100, 100, 120, 180)))
+		self.hisData.grid(row=0, column=1,columnspan=2)
+		self.hisData.bind("<Double-1>", self.winSameTime)
 
-		for num, data in enumerate(isData):
-			self.dataView.insert('','end', values=data)
+	def winSameTime(self, event):
+		winSameTime = tk.Toplevel(self.dash)
+		p = self.hisData.item(self.hisData.selection())
+		dataTeman = p['values'][2]
+		splittime = dataTeman[-8:-3]
+
+		sameHist = []
+		for teman in self.logTeman.Waktu:
+			jam = teman.to_pytimedelta()
+			if splittime in str(jam):
+				sameHist.append(self.logTeman[self.logTeman.Waktu == jam].values.tolist()[0])
+		print(sameHist)
+		sameTime = self.showListData(winSameTime, (sameHist,('id','nama','tanggal', 'waktu', 'lokasi', 'coor'),('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Koordinat'), (160, 100, 100, 100, 120, 180)))
+		sameTime.grid(row=0, column=1,columnspan=2)
+		winSameTime.mainloop()
+		
 
 	def showPlt(self):
 		import matplotlib.pyplot as plt

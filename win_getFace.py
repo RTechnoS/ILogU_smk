@@ -42,7 +42,7 @@ class Mulai:
 	def startCap(self):
 		self.__winDaftar.destroy()
 
-		self.cap = cv.VideoCapture('http://192.168.100.201:4747/video')
+		self.cap = cv.VideoCapture('http://192.168.100.190:4747/video')
 		#self.cap = cv.VideoCapture('../videoContoh/rusman.mp4')
 		#self.cap = cv.VideoCapture(0)
 
@@ -78,7 +78,7 @@ class Mulai:
 
 			cv.imshow('Perekaman', frame)
 
-			if self.jumlahCap <= 800:
+			if self.jumlahCap <= 600:
 				if cv.waitKey(20) & 0xFF == ord('q'):
 					self.closing_win()
 

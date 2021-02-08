@@ -32,17 +32,19 @@ class lacak:
 
 		    dataTeman = c.fetchall()
 		    if len(dataTeman) != 0:
-		        self.logTeman.append(dataTeman[0])
+		    	self.logTeman.append(dataTeman[0])
+		
 		self.prosesData()
-		return self.logKorban
+		return (self.logKorban, self.logTeman)
 
 	def prosesData(self):
 		self.dataF = pd.DataFrame(columns=('nama', 'oneLoc', 'near', 'hari', 'jumlahHari'))
 		self.logKorban = pd.DataFrame(self.logKorban, columns=self.col) # log si korban covid
-		self.logTeman = pd.DataFrame(self.logTeman, columns=self.col) # log teman yang pernah satu lokasi dengan korban
-		self.logKorban.drop('id',axis=1, inplace=True) 
-		self.logTeman.drop('id',axis=1, inplace=True)
+		self.logTeman = pd.DataFrame(self.logTeman, columns=self.col) # log teman yang pernah satu lokasi dengan korban\
 
+		self.logKorban.drop('id',axis=1, inplace=True) 
+		self.logTeman.drop(['id', 'Terdekat'],axis=1, inplace=True)
+		
 		for g in set(self.logTeman.Nama.unique()):
 			self.dataF = self.dataF.append({'nama':g, 'near':self.logTerdekat.count(g), 'hari':list(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique()), 'jumlahHari':len(self.logTeman.Tanggal[self.logTeman['Nama'] == g].unique())} , ignore_index=True)
 		tanggalKorban = self.logKorban.sort_values(by='Tanggal').Tanggal.unique() # semua tanggal saat korban terlacak
@@ -53,10 +55,14 @@ class lacak:
 			for lk in Lok: #
 				for p in self.logTeman[self.logTeman.Tanggal == tgl].sort_values(by='Waktu')['Nama'].unique():
 					d.append(p)
-
+		#print(self.logKorban.Waktu)
+		#self.logKorban['Waktu'] = pd.to_datetime(self.logKorban.Waktu)
 		self.dataF = self.dataF.set_index('nama')
+
 		for na in self.dataF.index:
 			self.dataF.at[na, 'oneLoc'] = d.count(na)
+
+
 		self.dataF.to_csv(f'siswa_csv/{self.namaKorban}.csv', index = True)
 
 
