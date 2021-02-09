@@ -1,5 +1,5 @@
 nama,oneLoc,near,hari,jumlahHari
-Rusman Tobyakta Siregar,8,6,"[datetime.date(2020, 12, 2), datetime.date(2020, 12, 3), datetime.date(2020, 12, 5), datetime.date(2020, 11, 30)]",4
-unkown,10,0,"[datetime.date(2020, 12, 2), datetime.date(2020, 12, 3), datetime.date(2021, 1, 26), datetime.date(2021, 2, 1), datetime.date(2020, 12, 5), datetime.date(2020, 11, 30)]",6
-Fajar Amrullah,10,1,"[datetime.date(2020, 12, 2), datetime.date(2020, 12, 3), datetime.date(2021, 2, 1), datetime.date(2020, 12, 5), datetime.date(2020, 11, 30), datetime.date(2021, 1, 29)]",6
 Raja Alkandri,3,0,"[datetime.date(2020, 12, 2), datetime.date(2020, 11, 30)]",2
+unkown,10,0,"[datetime.date(2020, 12, 2), datetime.date(2020, 12, 3), datetime.date(2021, 1, 26), datetime.date(2021, 2, 1), datetime.date(2020, 12, 5), datetime.date(2020, 11, 30)]",6
+Rusman Tobyakta Siregar,8,6,"[datetime.date(2020, 12, 2), datetime.date(2020, 12, 3), datetime.date(2020, 12, 5), datetime.date(2020, 11, 30)]",4
+Fajar Amrullah,10,1,"[datetime.date(2020, 12, 2), datetime.date(2020, 12, 3), datetime.date(2021, 2, 1), datetime.date(2020, 12, 5), datetime.date(2020, 11, 30), datetime.date(2021, 1, 29)]",6

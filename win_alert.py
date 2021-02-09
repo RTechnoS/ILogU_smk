@@ -24,8 +24,9 @@ class Main:
 		tk.Button(self.frmDaftar, text='Cari', width=10, command=self.selectSiswa).grid(row=0, column=4, padx=15)
 		self.frmDaftar.mainloop()
 
-	def showListData(self, window, dataList):
+	def showListData(self, window, dataList, scroll=(0,3)):
 		_isiData, column, titleCol, sizeCol = dataList
+		sRow, sCol = scroll
 		style = ttk.Style(window)
 		style.configure('Treeview', rowheight=25, height=50)
 
@@ -41,7 +42,7 @@ class Main:
 			dataView.insert('','end', values=data)
 
 		scrollData = ttk.Scrollbar(window, orient="vertical", command=dataView.yview)
-		scrollData.grid(row=0, column=3,sticky=tk.N+tk.S)
+		scrollData.grid(row=sRow, column=sCol,sticky=tk.N+tk.S)
 		dataView.configure(yscrollcommand=scrollData.set)
 		return dataView
 
@@ -86,9 +87,11 @@ class Main:
 		from pandas import read_csv
 		self.dataF = read_csv(f"siswa_csv/{self.korban}.csv")
 		self.dataF = self.dataF.set_index('nama')
-		self.forPlot = self.dataF.sort_values(by=['near', 'oneLoc'])
-		if len(self.dataF) >= 15:
-			self.forPlot = self.forPlot.head(15)
+		self.friendDetail = self.dataF.sort_values(by=['near', 'oneLoc'], ascending=False)
+		if len(self.friendDetail) >= 15:
+			self.forPlot = self.friendDetail.head(15)
+		else:
+			self.forPlot = self.friendDetail
 
 	def showData(self):
 		indexData = list(self.logKorban.keys())
@@ -99,6 +102,17 @@ class Main:
 		self.hisData = self.showListData(self.frameList, (isData, indexData, ('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Koordinat'), (160, 100, 100, 100, 120, 180)))
 		self.hisData.grid(row=0, column=1,columnspan=2)
 		self.hisData.bind("<Double-1>", self.winSameTime)
+		self.friendList()
+
+	def friendList(self):
+		indexData = ('nama', 'countlok', 'countnear', 'countday')
+
+		print(self.friendDetail)
+		isData = self.friendDetail.drop('hari', axis=1).reset_index().values.tolist()
+		print(isData)
+		hisFriend = self.showListData(self.frameList, (isData, indexData, ('Nama', 'Satu Lokasi', 'Berdekatan', 'Jumlah Hari'), (160, 100, 100, 100)), (0,7))
+		hisFriend.grid(row=0, column=5,columnspan=2)
+		
 
 	def winSameTime(self, event):
 		winSameTime = tk.Toplevel(self.dash)
@@ -111,7 +125,6 @@ class Main:
 			jam = teman.to_pytimedelta()
 			if splittime in str(jam):
 				sameHist.append(self.logTeman[self.logTeman.Waktu == jam].values.tolist()[0])
-		print(sameHist)
 		sameTime = self.showListData(winSameTime, (sameHist,('id','nama','tanggal', 'waktu', 'lokasi', 'coor'),('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Koordinat'), (160, 100, 100, 100, 120, 180)))
 		sameTime.grid(row=0, column=1,columnspan=2)
 		winSameTime.mainloop()
@@ -162,4 +175,5 @@ class Main:
 		canvas = FigureCanvasTkAgg(fig, self.__frmLog)
 		canvas.get_tk_widget().pack(side=tk.TOP, fill=tk.BOTH)
 		self.showData()
+		
 
