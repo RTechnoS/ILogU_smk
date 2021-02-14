@@ -2,9 +2,10 @@ import tkinter as tk
 import fungsi
 import win_cctv as Scctv
 from tkinter import messagebox
+from PIL import Image, ImageTk
 
 print(fungsi.getTime('all'))
-
+warna = '#f4f1f1'
 class Dashboard:
 	def __init__(self, master):
 		
@@ -12,17 +13,25 @@ class Dashboard:
 		p1 = tk.PhotoImage(file = 'media/logo.png')
 		master.iconphoto(True, p1)
 		self.dash.geometry('800x550')
+		self.dash.configure(bg=warna)
 		
 		#self.dash.configure()
 		self.dash.title('I Log U')
 		self.dash.resizable(False, False)
 
-		self.frameAwal = tk.Frame(self.dash)
+		self.frameAwal = tk.Frame(self.dash, bg=warna)
 		self.frameAwal.pack(fill=tk.BOTH, expand=True, padx=15, pady=15)
 		
-		tk.Label(self.frameAwal, text='Aplikasi pelacak Covid-19 Sekolah',  fg='red', font=('calibri', 20)).pack()
+		tk.Label(self.frameAwal, text='Aplikasi pelacak Covid-19 Sekolah',  fg='red', bg=warna, font=('calibri', 23), pady=8).pack()
+		frmLogo = tk.Frame(self.frameAwal, pady=65, bg=warna)
+		frmLogo.pack()
+		load = Image.open("media/logo_big.png")
+		render = ImageTk.PhotoImage(load)
+		img = tk.Label(frmLogo, image=render, pady=50)
+		img.image = render
+		img.pack()
 
-		frameBtn = tk.Frame(self.frameAwal)
+		frameBtn = tk.Frame(self.frameAwal, bg=warna)
 		frameBtn.pack(side=tk.BOTTOM, fill=tk.X)
 		tk.Button(frameBtn, text='Rekam Wajah', state=tk.NORMAL, command=self.addWajah).grid(row=0, column=0, padx=15)
 		tk.Button(frameBtn, text='Latih Wajah', state=tk.NORMAL, command=self.latihWajah).grid(row=0, column=1, padx=15)

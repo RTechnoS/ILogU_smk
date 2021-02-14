@@ -53,7 +53,7 @@ class logSiswa(Mulai):
 		self.win.title('Log Siswa')
 
 	def updateData(self):
-		c.execute("SELECT * from logSiswa")
+		c.execute("SELECT * from logSiswa ORDER BY tanggal DESC;")
 		self.isData = c.fetchall()
 		self.countData = c.rowcount
 

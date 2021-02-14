@@ -14,10 +14,8 @@ class Main:
 		
 	def formData(self):
 		self.frmDaftar = tk.Toplevel(self.dash)
-		self.frmDaftar.geometry('400x50')
-
-		self.frmDaftar.resizable(False, False)
-		self.frmDaftar.title('Pelacak')
+		
+		self.frmDaftar.title('Cari Siswa')
 
 		tk.Label(self.frmDaftar, text='Nama : ').grid(row=0,column=1)
 		inNama = tk.Entry(self.frmDaftar, textvariable=self.namaKorban).grid(row=0, column=2)
@@ -31,11 +29,9 @@ class Main:
 		style.configure('Treeview', rowheight=size[0], height=size[1])
 
 		dataView = ttk.Treeview(window)
-		# for i in dataView.get_children():
-		# 	dataView.detach(i)
 
 		dataView.config(columns=column, show = "headings")
-			
+		
 		for t1,t2,t3 in zip(column,titleCol, sizeCol):
 			dataView.heading(t1, text=t2)
 			dataView.column(t1, width=t3)
@@ -50,21 +46,28 @@ class Main:
 
 
 	def selectSiswa(self):
-		self.frmDaftar.destroy()
-		self.listKorban = tk.Toplevel(self.dash)
+		try:
+			self.frameDaftar.destroy()
+		except:
+			pass
+		self.frameDaftar = tk.Frame(self.frmDaftar)
+		self.frameDaftar.grid(row=2, column=1,columnspan=2)
 		c.execute("SELECT * FROM dataSiswa WHERE nama LIKE '%{}%'".format(self.namaKorban.get()))
 		_isiData = c.fetchall()
 
 		if len(_isiData) >= 1:
-			self.sameName = self.showListData(self.listKorban, (_isiData,('no', 'nama', 'kelas'),('No', 'Nama', 'Kelas'), (30, 175, 120)))
-			self.sameName.grid(row=0, column=1,columnspan=2)
+			self.sameName = self.showListData(self.frameDaftar, (_isiData,('no', 'nama', 'kelas'),('No', 'Nama', 'Kelas'), (30, 175, 120)), scroll=(2,3))
+			self.sameName.grid(row=2, column=1,columnspan=2)
 			self.sameName.bind("<Double-1>", self.winLacak)
+
 		else:
-			tk.Label(self.listKorban, text='Siswa Tidak Ditemukan', padx=20, pady=20,  fg='red', font=('calibri', 15)).pack()
+			tk.Label(self.frameDaftar, text='Siswa Tidak Ditemukan', padx=20, pady=20,  fg='red', font=('calibri', 15)).grid(row=2, column=1,columnspan=2)
+
+
 			
 	def winLacak(self, event):
 		p = self.sameName.item(self.sameName.selection()[0])
-		self.listKorban.destroy()
+		self.frmDaftar.destroy()
 
 		self.namaKorban = p['values'][1]
 		self.__frmLog = tk.Toplevel(self.dash)
@@ -99,7 +102,7 @@ class Main:
 		indexData = list(self.logKorban.keys())
 		self.frameList = tk.Frame(self.__frmLog, bg='black')
 		self.frameList.pack(side=tk.BOTTOM)
-		isData = self.logKorban.values.tolist()
+		isData = self.logKorban.sort_values(by=['Tanggal','Waktu'], ascending=False).values.tolist()
 		#print(isData)
 		self.hisData = self.showListData(self.frameList, (isData, indexData, ('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Terdekat', 'Koordinat'), (160, 100, 100, 100, 120, 180)))
 		self.hisData.grid(row=0, column=1,columnspan=2)
@@ -112,8 +115,8 @@ class Main:
 		hisFriend.grid(row=0, column=5,columnspan=2)
 
 	def dayList(self):
-		isData = self.logKorban.Tanggal.unique()
-		print(isData)
+		isData = self.logKorban.sort_values(by=['Tanggal'], ascending=False).Tanggal.unique()
+		#print(isData)
 		self.hisDay = self.showListData(self.frameList, (isData, ('tanggal',), ('Tanggal',), (160,)), (0,10))
 		self.hisDay.grid(row=0, column=8,columnspan=2)
 		self.hisDay.bind("<Double-1>", self.click_dayList)
@@ -132,7 +135,7 @@ class Main:
 				sameHist = self.logTeman[self.logTeman.Waktu == jam].values.tolist()
 
 		for k in sameHist:
-			print(k)
+			#print(k)
 			if k not in timeData:
 				timeData.append(k)
 
@@ -173,16 +176,17 @@ class Main:
 		for _tgl in self.logTeman.Tanggal.unique():
 			tgl = _tgl.strftime('%Y-%m-%d')
 			if tgl == self.select_date:
-				tglData = self.logTeman[self.logTeman.Tanggal == _tgl]
+				tglData = self.logTeman[self.logTeman.Tanggal == _tgl].sort_values(by=['Waktu'], ascending=False)
 
-		print(tglData)
-		for _jam in tglData.Waktu:
-			#print(dir(_jam))
-			_jam = _jam
+
+		tmpOrg = []
+		for org in tglData.values.tolist():
+			_jam = org[2]
 			if jam in str(_jam):
-				isData = tglData[tglData.Waktu == _jam]
-		isData = isData.Waktu.unique()
-		print(isData)
+				if org[0] not in tmpOrg:
+					isData.append(org)
+					tmpOrg.append(org[0])
+
 		his = self.showListData(win_dayList, (isData, ('id','nama','tanggal', 'waktu', 'lokasi', 'coor'),('Nama', 'Tanggal', 'Waktu', 'Lokasi', 'Koordinat'), (160, 100, 100, 100, 120, 180)))
 		his.grid(row=0, column=1,columnspan=2)
 		
